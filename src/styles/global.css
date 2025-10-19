@@ -6,3 +6,6 @@
   @apply px-5 py-2 bg-cyan-600 text-white font-semibold rounded-lg shadow-md
          hover:bg-cyan-700 transition-colors duration-300;
 }
+.card {
+  @apply bg-white rounded-lg shadow-lg p-6;
+}

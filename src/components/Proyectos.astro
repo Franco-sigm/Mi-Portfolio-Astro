@@ -1,0 +1,64 @@
+---
+// src/components/Proyectos.astro
+---
+
+<section id="proyectos" class="min-h-screen container mx-auto py-20 px-8">
+    <h2 class="section-title">Mis Proyectos</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+        <div class="card flex flex-col hover:scale-105 transition-transform duration-300">
+            <img 
+                src="https://via.placeholder.com/400x200.png/1f2937/ffffff?text=App+Condominios" 
+                alt="Vista previa de la aplicación de administración de condominios"
+                class="w-full h-48 object-cover rounded-t-lg"
+            />
+            
+            <div class="p-6 flex flex-col flex-grow">
+                <h3 class="text-2xl font-bold mb-2">App de Administración de Condominios</h3>
+                <p class="text-gray-400 mb-4 flex-grow">
+                    Aplicación full-stack para gestionar pagos, anuncios y comunicación en condominios.
+                </p>
+
+                <div class="flex flex-wrap gap-2 mb-6">
+                    <span class="tech-tag">Vite</span>
+                    <span class="tech-tag">Vanilla JS</span>
+                    <span class="tech-tag">Tailwind</span>
+                    <span class="tech-tag">Node.js</span>
+                </div>
+
+                <div class="flex gap-4 mt-auto">
+                    <a href="#" class="btn-primary w-full text-center">Ver Demo</a>
+                    <a href="#" class="btn-secondary w-full text-center">Código</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card flex flex-col hover:scale-105 transition-transform duration-300">
+            <img 
+                src="https://via.placeholder.com/400x200.png/1f2937/ffffff?text=Portafolio+SPA" 
+                alt="Vista previa del portafolio personal"
+                class="w-full h-48 object-cover rounded-t-lg"
+            />
+            
+            <div class="p-6 flex flex-col flex-grow">
+                <h3 class="text-2xl font-bold mb-2">Portafolio Personal</h3>
+                <p class="text-gray-400 mb-4 flex-grow">
+                    Este mismo portafolio, construido como una SPA para demostrar habilidades en desarrollo front-end.
+                </p>
+
+                <div class="flex flex-wrap gap-2 mb-6">
+                    <span class="tech-tag">Astro</span>
+                    <span class="tech-tag">Tailwind</span>
+                    <span class="tech-tag">Bun</span>
+                </div>
+
+                <div class="flex gap-4 mt-auto">
+                    <a href="#" class="btn-primary w-full text-center opacity-50 cursor-not-allowed" aria-disabled="true">Ver Demo</a>
+                    <a href="#" class="btn-secondary w-full text-center">Código</a>
+                </div>
+            </div>
+        </div>
+
+        </div>
+</section>
