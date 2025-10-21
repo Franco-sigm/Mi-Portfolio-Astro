@@ -17,7 +17,8 @@ body {
          hover:bg-cyan-700 transition-colors duration-300;
 }
 .card {
-  @apply bg-[#434C5A] rounded-lg shadow-lg p-6;
+  @apply rounded-lg shadow-lg p-6 transition-shadow duration-300
+         hover:shadow-[0_0_15px_rgba(34,211,238,0.2)];
 }
 .section-franco {
   @apply text-5xl font-bold text-white mb-4;
