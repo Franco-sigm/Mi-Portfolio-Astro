@@ -11,6 +11,14 @@ body {
   @apply bg-gray-900 text-white;
 }
 
+
+.badge-blue {
+  @apply inline-flex items-center rounded-md bg-blue-400/10 px-2 py-1 text-xs font-medium text-blue-400 ring-1 ring-inset ring-blue-400/30;
+}
+.badge-green {
+  @apply inline-flex items-center rounded-md bg-green-400/10 px-2 py-1 text-xs font-medium text-green-400 ring-1 ring-inset ring-green-500/20;
+}
+
 /* Estilos para botones */
 .btn-primary {
   @apply px-5 py-2 bg-cyan-600 text-white font-semibold rounded-lg shadow-md
