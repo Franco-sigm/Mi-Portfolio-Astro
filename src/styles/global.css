@@ -1,5 +1,15 @@
-@import "tailwindcss";
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+html {
+  scroll-behavior: smooth;
+}
+body {
+  @apply bg-gray-900 text-white;
+}
 
 /* Estilos para botones */
 .btn-primary {
@@ -13,7 +23,7 @@
   @apply text-5xl font-bold text-white mb-4;
 }
 .section-subtitle {
-  @apply text-3xl font-bold text-white mb-4;
+  @apply text-3xl font-bold mb-6 text-white;
 
 }
 .text-yellow {

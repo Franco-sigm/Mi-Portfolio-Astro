@@ -5,16 +5,16 @@ import portafolio from '../assets/portafolio.png'
 import condominio from '../assets/condominio.png'
 ---
 
-<section id="proyectos" class="min-h-screen container mx-auto py-20 px-8">
-    <h2 class="section-subtitle text-xl-3">Mis Proyectos</h2>
+<section id="proyectos" class="min-h-screen max-w-5xl mx-auto py-12 px-6">
+    <h2 class="section-subtitle">Mis Proyectos</h2>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
 
         <div class="card flex flex-col hover:scale-105 transition-transform duration-300">
             <Image
                 src={condominio}
                 alt="Vista previa de la aplicación de administración de condominios"
-                class="w-full h-48 object-cover rounded-t-lg"
+                class="w-full h-48 object-cover rounded-t-lg aspect-video"
             />
             
             <div class="p-6 flex flex-col flex-grow">
@@ -41,7 +41,7 @@ import condominio from '../assets/condominio.png'
             <Image
                 src={portafolio}
                 alt="Vista previa del portafolio personal"
-                class="w-full h-48 object-cover rounded-t-lg"
+                class="w-full h-48 object-cover rounded-t-lg aspect-video"
             />
             
             <div class="p-6 flex flex-col flex-grow">
