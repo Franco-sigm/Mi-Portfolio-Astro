@@ -1,27 +1,23 @@
 
 ---
-import { Image } from 'astro:assets';
-import corchetes from '../assets/corchetes.png';
+
 ---
-<header id ="inicio" class="bg-gray-800/80 backdrop-blur-sm p-4 sticky top-0 z-50 shadow-lg">
-    <nav class="container mx-auto flex items-center justify-between">
+<header id="header" class="fixed top-0 z-10 flex items-center justify-center w-full mx-auto mt-2">
+     <nav  class="flex px-3 text-sm font-medium rounded-full text-gray-600 dark:text-gray-900 justify-center items-center">
 
-        <div>
-           <Image src={corchetes} alt="Logo" class="w-16 h-auto" />
-        </div>
+        
 
-        <div class="hidden md:flex space-x-8">
+        <div  class="hidden md:flex space-x-8">
             <a href="#estudios" class="text-lg text-gray-300 hover:text-cyan-400 transition-colors">Certificados</a>
             <a href="#proyectos" class="text-lg text-gray-300 hover:text-cyan-400 transition-colors">Proyectos</a>
-            <a href="#inicio" class="text-lg text-gray-300 hover:text-cyan-400 transition-colors">inicio</a>
-        </div>
-
-        <div class="hidden md:block">
-            <a href="#contacto" class="button-yellow">
-                Hablemos
-            </a>
+            <a href="#sobre-mi" class="text-lg text-gray-300 hover:text-cyan-400 transition-colors">inicio</a>
         </div>
 
     </nav>
 </header>
+
+<script>
+
+</script>
+
 
