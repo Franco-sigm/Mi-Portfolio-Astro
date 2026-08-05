@@ -1,18 +1,77 @@
+---
+import { PROFILE } from '../consts';
 
+const links = [
+  { href: '#inicio', label: 'Inicio' },
+  { href: '#skills', label: 'Tecnologías' },
+  { href: '#proyectos', label: 'Proyectos' },
+  { href: '#estudios', label: 'Certificados' },
+  { href: '#contacto', label: 'Contacto' },
+];
 ---
 
----
-<header id="header" class="fixed top-0 z-10 flex items-center justify-center w-full mx-auto mt-2">
-     <nav  class="flex px-3 text-sm font-medium rounded-full text-gray-600 dark:text-gray-900 justify-center items-center">
+<header
+  id="header"
+  class="fixed top-0 z-50 w-full border-b border-white/5 bg-gray-900/70 backdrop-blur-md"
+>
+  <nav class="mx-auto flex max-w-5xl items-center justify-between px-6 py-3">
+    <a href="#inicio" class="text-lg font-bold text-white">
+      Franco<span class="text-yellow">.dev</span>
+    </a>
 
-        
+    <div class="hidden items-center gap-7 md:flex">
+      {
+        links.map((l) => (
+          <a
+            href={l.href}
+            class="text-sm font-medium text-gray-300 transition-colors hover:text-cyan-400"
+          >
+            {l.label}
+          </a>
+        ))
+      }
+      <a href={PROFILE.cvPath} download class="button-yellow text-sm">
+        Descargar CV
+      </a>
+    </div>
 
-        <div  class="hidden md:flex space-x-8">
-            <a href="#estudios" class="text-lg text-gray-300 hover:text-cyan-400 transition-colors">Certificados</a>
-            <a href="#proyectos" class="text-lg text-gray-300 hover:text-cyan-400 transition-colors">Proyectos</a>
-            <a href="#sobre-mi" class="text-lg text-gray-300 hover:text-cyan-400 transition-colors">inicio</a>
-        </div>
+    <!-- Botón menú móvil -->
+    <button
+      id="menu-toggle"
+      class="text-gray-200 md:hidden"
+      aria-label="Abrir menú"
+      aria-expanded="false"
+    >
+      <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+      </svg>
+    </button>
+  </nav>
 
-    </nav>
+  <!-- Menú móvil desplegable -->
+  <div id="mobile-menu" class="hidden border-t border-white/5 bg-gray-900/95 px-6 py-4 md:hidden">
+    {
+      links.map((l) => (
+        <a href={l.href} class="block py-2 text-gray-300 transition-colors hover:text-cyan-400">
+          {l.label}
+        </a>
+      ))
+    }
+    <a href={PROFILE.cvPath} download class="button-yellow mt-3 inline-block text-sm">
+      Descargar CV
+    </a>
+  </div>
 </header>
 
+<script>
+  const toggle = document.getElementById('menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+  toggle?.addEventListener('click', () => {
+    const open = menu?.classList.toggle('hidden');
+    toggle.setAttribute('aria-expanded', String(!open));
+  });
+  // Cierra el menú al hacer clic en un enlace
+  menu?.querySelectorAll('a').forEach((a) =>
+    a.addEventListener('click', () => menu.classList.add('hidden'))
+  );
+</script>

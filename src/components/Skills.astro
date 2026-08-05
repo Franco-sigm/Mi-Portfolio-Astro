@@ -1,0 +1,21 @@
+---
+import { SKILLS } from '../consts';
+---
+
+<section id="skills" class="mx-auto max-w-5xl px-6 py-20">
+  <h2 class="section-subtitle text-center">Tecnologías que utilizo</h2>
+  <p class="mx-auto mb-10 max-w-2xl text-center text-gray-400">
+    Stack con el que construyo aplicaciones web de principio a fin.
+  </p>
+
+  <div class="flex flex-wrap justify-center gap-3">
+    {
+      SKILLS.map((s) => (
+        <span class="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-gray-200 transition-colors hover:border-cyan-400/50 hover:text-white">
+          <span aria-hidden="true">{s.icon}</span>
+          {s.name}
+        </span>
+      ))
+    }
+  </div>
+</section>

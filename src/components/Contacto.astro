@@ -1,0 +1,27 @@
+---
+import { PROFILE } from '../consts';
+---
+
+<section id="contacto" class="mx-auto max-w-3xl px-6 py-20 text-center">
+  <h2 class="section-subtitle">¿Trabajamos juntos?</h2>
+  <p class="mx-auto mb-8 max-w-xl text-lg text-gray-300">
+    Estoy abierto a nuevas oportunidades. Si buscas un desarrollador
+    comprometido y con ganas de crecer, hablemos.
+  </p>
+
+  <div class="flex flex-wrap justify-center gap-4">
+    <a href={`mailto:${PROFILE.email}`} class="btn-primary">
+      ✉️ Escríbeme un correo
+    </a>
+    <a
+      href={PROFILE.linkedin}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="btn-outline"
+    >
+      Conectar en LinkedIn
+    </a>
+  </div>
+
+  <p class="mt-6 text-sm text-gray-500">{PROFILE.email}</p>
+</section>

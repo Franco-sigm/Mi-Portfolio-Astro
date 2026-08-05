@@ -1,96 +1,66 @@
 ---
-// src/components/Proyectos.astro
 import { Image } from 'astro:assets';
-import portafolio from '../assets/portafolio.png'
-import condominio from '../assets/condominio.png'
+import { PROJECTS } from '../consts';
+import portafolio from '../assets/portafolio.png';
+import condominio from '../assets/condominio.png';
+
+const images = { portafolio, condominio };
 ---
 
-<section id="proyectos" class="min-h-screen max-w-5xl mx-auto py-12 px-6">
-    <h2 class="section-subtitle">Mis Proyectos</h2>
+<section id="proyectos" class="mx-auto max-w-5xl px-6 py-20">
+  <h2 class="section-subtitle text-center">Mis Proyectos</h2>
+  <p class="mx-auto mb-10 max-w-2xl text-center text-gray-400">
+    Proyectos reales donde aplico lo que sé. Revisa el código y la demo.
+  </p>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+  <div class="grid grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-3">
+    {
+      PROJECTS.map((p) => (
+        <article class="card flex flex-col p-0 transition-transform duration-300 hover:scale-[1.03]">
+          <Image
+            src={images[p.image]}
+            alt={`Vista previa de ${p.title}`}
+            class="aspect-video h-48 w-full rounded-t-lg object-cover"
+          />
 
-        <div class="card flex flex-col hover:scale-105 transition-transform duration-300">
-            <Image
-                src={condominio}
-                alt="Vista previa de la aplicación de administración de condominios"
-                class="w-full h-48 object-cover rounded-t-lg aspect-video"
-            />
-            
-            <div class="p-6 flex flex-col flex-grow">
-                <h3 class="text-2xl font-bold mb-2">App de Administración de Condominios</h3>
-                <p class="text-gray-400 mb-4 flex-grow">
-                    Aplicación full-stack para gestionar pagos, anuncios y comunicación en condominios.
-                </p>
+          <div class="flex flex-grow flex-col p-6">
+            <h3 class="mb-2 text-xl font-bold text-white">{p.title}</h3>
+            <p class="mb-4 flex-grow text-sm text-gray-400">{p.description}</p>
 
-                <div class="flex flex-wrap gap-2 mb-6 ">
-                    <span class="tech-tag">Vite</span>
-                    <span class="tech-tag">Vanilla JS</span>
-                    <span class="tech-tag">Tailwind</span>
-                    <span class="tech-tag">Node.js</span>
-                </div>
-
-                <div class="flex gap-4 mt-auto">
-                    <a href="#" class="badge-blue text-center">Ver Demo</a>
-                    <a href="#" class="badge-blue text-center">Código</a>
-                </div>
+            <div class="mb-6 flex flex-wrap gap-2">
+              {p.tags.map((t) => (
+                <span class="tech-tag">{t}</span>
+              ))}
             </div>
-        </div>
 
-        <div class="card flex flex-col hover:scale-105 transition-transform duration-300">
-            <Image
-                src={portafolio}
-                alt="Vista previa del portafolio personal"
-                class="w-full h-48 object-cover rounded-t-lg aspect-video"
-            />
-            
-            <div class="p-6 flex flex-col flex-grow">
-                <h3 class="text-2xl font-bold mb-2">Portafolio Personal</h3>
-                <p class="text-gray-400 mb-4 flex-grow">
-                    Este mismo portafolio, construido como una SPA para demostrar habilidades en desarrollo front-end.
-                </p>
-
-                <div class="flex flex-wrap gap-2 mb-6">
-                    <span class="tech-tag">Astro</span>
-                    <span class="tech-tag">Tailwind</span>
-                    <span class="tech-tag">Bun</span>
-                </div>
-
-                <div class="flex gap-4 mt-auto">
-                    <a href="#" class="badge-blue text-center">Ver Demo</a>
-                    <a href="#" class="badge-blue text-center">Código</a>
-                </div>
+            <div class="mt-auto flex gap-3">
+              {p.demo && (
+                <a
+                  href={p.demo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="badge-blue flex-1 justify-center"
+                >
+                  Ver Demo
+                </a>
+              )}
+              {p.code && (
+                <a
+                  href={p.code}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="badge-green flex-1 justify-center"
+                >
+                  Código
+                </a>
+              )}
+              {!p.demo && !p.code && (
+                <span class="text-xs italic text-gray-500">En desarrollo</span>
+              )}
             </div>
-        </div>
-
-        <div class="card flex flex-col hover:scale-105 transition-transform duration-300">
-            <Image
-                src={portafolio}
-                alt="Vista previa del portafolio personal"
-                class="w-full h-48 object-cover rounded-t-lg aspect-video"
-            />
-            
-            <div class="p-6 flex flex-col flex-grow">
-                <h3 class="text-2xl font-bold mb-2">Portafolio Personal</h3>
-                <p class="text-gray-400 mb-4 flex-grow">
-                    Este mismo portafolio, construido como una SPA para demostrar habilidades en desarrollo front-end.
-                </p>
-
-                <div class="flex flex-wrap gap-2 mb-6">
-                    <span class="tech-tag">Astro</span>
-                    <span class="tech-tag">Tailwind</span>
-                    <span class="tech-tag">Bun</span>
-                </div>
-
-                <div class="flex gap-4 mt-auto">
-                    <a href="#" class="badge-blue text-center">Ver Demo</a>
-                    <a href="#" class="badge-blue text-center">Código</a>
-                </div>
-            </div>
-        </div>
-
-
-         
-
-        </div>
+          </div>
+        </article>
+      ))
+    }
+  </div>
 </section>
