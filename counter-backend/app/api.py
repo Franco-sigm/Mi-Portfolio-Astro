@@ -1,19 +1,28 @@
-import pymysql
+import os
+
 from flask import Flask, jsonify
 from flask_cors import CORS
-import config
+
+# Importar db también carga el .env (load_dotenv), así que las
+# variables de entorno ya están disponibles más abajo.
+from db import get_db_connection
 
 app = Flask(__name__)
-CORS(app)  
 
-def get_db_connection():
-    return pymysql.connect(
-        host=config.DB_HOST,
-        user=config.DB_USER,
-        password=config.DB_PASSWORD,
-        database=config.DB_NAME,
-        cursorclass=pymysql.cursors.DictCursor
-    )
+# Solo estos orígenes pueden llamar a la API desde un navegador.
+# Se definen en el .env (CORS_ORIGINS, separados por coma) para no
+# tener que tocar el código al desplegar:
+#
+#   CORS_ORIGINS=https://portfolio-personal.surcode.cl,http://localhost:4321
+#
+ORIGENES_PERMITIDOS = [
+    origen.strip()
+    for origen in os.getenv("CORS_ORIGINS", "https://portfolio-personal.surcode.cl").split(",")
+    if origen.strip()
+]
+
+CORS(app, resources={r"/api/*": {"origins": ORIGENES_PERMITIDOS}})
+
 
 # Obtener estadísticas actuales
 @app.route('/api/stats', methods=['GET'])

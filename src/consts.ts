@@ -43,6 +43,22 @@ export const SKILLS: { name: string; icon: string }[] = [
 ];
 
 // -------------------------------------------------------------
+//  MÉTRICAS: contador de visitas y botón de corazón.
+//  La URL de la API Flask se lee de la variable PUBLIC_API_URL,
+//  que defines en un archivo .env en la raíz del proyecto:
+//
+//    En local:      PUBLIC_API_URL=http://127.0.0.1:5000
+//    En producción: PUBLIC_API_URL=https://tu-dominio.cl
+//
+//  Si la variable está vacía, la sección de métricas NO se
+//  renderiza: así el footer queda limpio mientras el backend no
+//  esté desplegado.
+// -------------------------------------------------------------
+export const METRICS = {
+  apiUrl: import.meta.env.PUBLIC_API_URL ?? '',
+};
+
+// -------------------------------------------------------------
 //  STACK COTIDIANO: con lo que trabajas día a día, agrupado por
 //  rol. A diferencia de SKILLS (todo lo que conoces), aquí va
 //  solo lo que podrías defender en una entrevista.

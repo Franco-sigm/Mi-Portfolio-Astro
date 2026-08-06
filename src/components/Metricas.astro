@@ -1,0 +1,207 @@
+---
+import { METRICS } from '../consts';
+
+// Sin URL de API no renderizamos nada: mejor un footer limpio que
+// un contador roto mientras el backend no esté desplegado.
+const enabled = Boolean(METRICS.apiUrl);
+---
+
+{
+  enabled && (
+    <div
+      class="metricas"
+      data-api={METRICS.apiUrl}
+      hidden
+      aria-label="Métricas del sitio"
+    >
+      <span class="metricas__visitas" title="Visitas al sitio">
+        <svg
+          class="h-4 w-4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
+          />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        <span data-visitas aria-live="polite">–</span>
+        <span class="sr-only">visitas</span>
+      </span>
+
+      <button type="button" class="metricas__like" data-like aria-pressed="false">
+        <svg class="metricas__corazon h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+        </svg>
+        <span data-corazones aria-live="polite">–</span>
+        <span class="sr-only">me gusta</span>
+      </button>
+    </div>
+  )
+}
+
+<style>
+  .metricas {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.875rem;
+    color: rgb(156 163 175); /* gray-400 */
+  }
+
+  .metricas__visitas,
+  .metricas__like {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  .metricas__like {
+    border-radius: 9999px;
+    border: 1px solid rgb(255 255 255 / 0.1);
+    padding: 0.25rem 0.75rem;
+    color: inherit;
+    transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .metricas__like:hover:not(:disabled) {
+    color: rgb(248 113 113); /* red-400 */
+    border-color: rgb(248 113 113 / 0.4);
+  }
+
+  .metricas__like:disabled {
+    cursor: default;
+    color: rgb(248 113 113);
+    border-color: rgb(248 113 113 / 0.4);
+  }
+
+  /* Corazón vacío por defecto, relleno cuando ya diste like */
+  .metricas__corazon {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    transition: fill 0.2s ease;
+  }
+
+  .metricas__like[aria-pressed='true'] .metricas__corazon {
+    fill: currentColor;
+  }
+
+  /* Golpecito al pulsar */
+  .metricas__like.is-latiendo .metricas__corazon {
+    animation: latido 0.45s ease;
+  }
+
+  @keyframes latido {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    35% {
+      transform: scale(1.35);
+    }
+    70% {
+      transform: scale(0.95);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .metricas__like.is-latiendo .metricas__corazon {
+      animation: none;
+    }
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+</style>
+
+<script>
+  const caja = document.querySelector<HTMLElement>('.metricas');
+
+  if (caja) {
+    const api = caja.dataset.api!.replace(/\/$/, '');
+    const salidaVisitas = caja.querySelector<HTMLElement>('[data-visitas]')!;
+    const salidaCorazones = caja.querySelector<HTMLElement>('[data-corazones]')!;
+    const boton = caja.querySelector<HTMLButtonElement>('[data-like]')!;
+
+    const YA_VISITO = 'portfolio:visita-contada';
+    const YA_DIO_LIKE = 'portfolio:like-dado';
+
+    const formatear = (n: number) => n.toLocaleString('es-CL');
+
+    async function pedir(ruta: string, metodo: 'GET' | 'POST' = 'GET') {
+      const res = await fetch(`${api}${ruta}`, { method: metodo });
+      if (!res.ok) throw new Error(`${metodo} ${ruta} → ${res.status}`);
+      return res.json();
+    }
+
+    function marcarComoYaDado() {
+      boton.setAttribute('aria-pressed', 'true');
+      boton.disabled = true;
+      boton.title = 'Ya diste tu corazón. ¡Gracias!';
+    }
+
+    async function iniciar() {
+      // Una visita por pestaña: sessionStorage se limpia al cerrarla,
+      // así un F5 no infla el contador pero una visita real sí cuenta.
+      const primeraDeLaSesion = !sessionStorage.getItem(YA_VISITO);
+
+      const datos = primeraDeLaSesion
+        ? { ...(await pedir('/api/stats')), ...(await pedir('/api/visit', 'POST')) }
+        : await pedir('/api/stats');
+
+      if (primeraDeLaSesion) sessionStorage.setItem(YA_VISITO, '1');
+
+      salidaVisitas.textContent = formatear(datos.visitas);
+      salidaCorazones.textContent = formatear(datos.corazones);
+
+      if (localStorage.getItem(YA_DIO_LIKE)) marcarComoYaDado();
+
+      // Solo ahora mostramos el bloque: si algo falló, nunca se ve.
+      caja.hidden = false;
+    }
+
+    boton.addEventListener('click', async () => {
+      if (boton.disabled) return;
+
+      // Respuesta inmediata: no esperamos al servidor para dar feedback.
+      const previo = Number(salidaCorazones.textContent!.replace(/\D/g, '')) || 0;
+      salidaCorazones.textContent = formatear(previo + 1);
+      marcarComoYaDado();
+      boton.classList.add('is-latiendo');
+      boton.addEventListener('animationend', () => boton.classList.remove('is-latiendo'), {
+        once: true,
+      });
+
+      try {
+        const datos = await pedir('/api/like', 'POST');
+        salidaCorazones.textContent = formatear(datos.corazones);
+        localStorage.setItem(YA_DIO_LIKE, '1');
+      } catch {
+        // Falló el servidor: deshacemos el optimismo.
+        salidaCorazones.textContent = formatear(previo);
+        boton.setAttribute('aria-pressed', 'false');
+        boton.disabled = false;
+        boton.title = 'No se pudo registrar. Inténtalo de nuevo.';
+      }
+    });
+
+    // Si la API no responde, el bloque se queda oculto y el footer
+    // se ve como si nunca hubiera existido.
+    iniciar().catch(() => {});
+  }
+</script>

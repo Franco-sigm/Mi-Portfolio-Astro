@@ -1,12 +1,15 @@
 import os
+from urllib.parse import urlparse
+
+import pymysql
 from dotenv import load_dotenv
 
 load_dotenv()
 
-database_url = os.getenv("DATABASE_URL")
+
 def get_db_connection():
     database_url = os.getenv("DATABASE_URL")
-    
+
     # Validación de la existencia de la variable de entorno
     if not database_url:
         raise ValueError("La variable DATABASE_URL no está configurada en el archivo .env")
