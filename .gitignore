@@ -17,8 +17,14 @@ pnpm-debug.log*
 .env
 .env.production
 
+
 # macOS-specific files
 .DS_Store
 
 # jetbrains setting folder
 .idea/
+
+# Python
+venv/
+__pycache__/
+*.pyc
