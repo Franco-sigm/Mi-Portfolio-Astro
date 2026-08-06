@@ -1,0 +1,47 @@
+---
+import { STACK } from '../consts';
+---
+
+<section id="stack" class="mx-auto max-w-5xl px-6 py-20">
+  <h2 class="section-subtitle text-center">Mi stack de trabajo</h2>
+  <p class="mx-auto mb-10 max-w-2xl text-center text-gray-400">
+    Las herramientas con las que construyo a diario, de la interfaz a la base de datos.
+  </p>
+
+  <div class="grid gap-6 md:grid-cols-3">
+    {
+      STACK.map((group) => (
+        <article class="card p-6">
+          <h3 class="text-lg font-semibold text-cyan-400">{group.category}</h3>
+          <p class="mb-5 mt-1 text-sm text-gray-400">{group.description}</p>
+
+          <ul class="flex flex-wrap gap-2">
+            {group.items.map((item) => (
+              <li class="flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm font-medium text-gray-200 transition-colors hover:border-cyan-400/40 hover:text-white">
+                <img
+                  src={item.icon}
+                  alt=""
+                  width="20"
+                  height="20"
+                  loading="lazy"
+                  decoding="async"
+                  class:list={['h-5 w-5 object-contain', item.invert && 'icon-invert']}
+                />
+                {item.name}
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  /* Logos monocromos oscuros (GitHub, Vercel, SQLAlchemy): los aplasta a
+     blanco puro para que se vean sobre el fondo oscuro. Es la variante
+     "dark mode" oficial de esas marcas. */
+  .icon-invert {
+    filter: brightness(0) invert(1);
+  }
+</style>

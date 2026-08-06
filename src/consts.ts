@@ -26,17 +26,68 @@ export const PROFILE = {
 };
 
 // Tecnologías que dominas. El reclutador escanea esto en 3 segundos.
+// `icon` apunta a un SVG dentro de /public/icons (logos oficiales de Devicon).
+// Para añadir una tecnología: descarga su SVG a /public/icons y agrégala aquí.
 export const SKILLS: { name: string; icon: string }[] = [
-  { name: 'JavaScript', icon: '🟨' },
-  { name: 'Node.js', icon: '🟩' },
-  { name: 'Python', icon: '🐍' },
-  { name: 'Astro', icon: '🚀' },
-  { name: 'Tailwind CSS', icon: '🎨' },
-  { name: 'MySQL', icon: '🗄️' },
-  { name: 'HTML5', icon: '🧱' },
-  { name: 'CSS3', icon: '💅' },
-  { name: 'Vite', icon: '⚡' },
-  { name: 'Git', icon: '🔀' },
+  { name: 'JavaScript', icon: '/icons/javascript.svg' },
+  { name: 'TypeScript', icon: '/icons/typescript.svg' },
+  { name: 'Node.js', icon: '/icons/nodejs.svg' },
+  { name: 'Python', icon: '/icons/python.svg' },
+  { name: 'Astro', icon: '/icons/astro.svg' },
+  { name: 'Tailwind CSS', icon: '/icons/tailwindcss.svg' },
+  { name: 'MySQL', icon: '/icons/mysql.svg' },
+  { name: 'HTML5', icon: '/icons/html5.svg' },
+  { name: 'CSS3', icon: '/icons/css3.svg' },
+  { name: 'Vite', icon: '/icons/vitejs.svg' },
+  { name: 'Git', icon: '/icons/git.svg' },
+];
+
+// -------------------------------------------------------------
+//  STACK COTIDIANO: con lo que trabajas día a día, agrupado por
+//  rol. A diferencia de SKILLS (todo lo que conoces), aquí va
+//  solo lo que podrías defender en una entrevista.
+//  `invert: true` → el logo es negro/oscuro y se pinta de blanco
+//  para que se vea sobre el fondo oscuro.
+// -------------------------------------------------------------
+export type StackItem = { name: string; icon: string; invert?: boolean };
+
+export const STACK: {
+  category: string;
+  description: string;
+  items: StackItem[];
+}[] = [
+  {
+    category: 'Frontend',
+    description: 'Interfaces rápidas, responsivas y accesibles.',
+    items: [
+      { name: 'React', icon: '/icons/react.svg' },
+      { name: 'Astro', icon: '/icons/astro.svg' },
+      { name: 'Tailwind CSS', icon: '/icons/tailwindcss.svg' },
+      { name: 'Vite', icon: '/icons/vitejs.svg' },
+      { name: 'TypeScript', icon: '/icons/typescript.svg' },
+    ],
+  },
+  {
+    category: 'Backend',
+    description: 'APIs REST y modelado de datos relacional.',
+    items: [
+      { name: 'Python', icon: '/icons/python.svg' },
+      { name: 'FastAPI', icon: '/icons/fastapi.svg' },
+      { name: 'SQLAlchemy', icon: '/icons/sqlalchemy.svg', invert: true },
+      { name: 'MySQL', icon: '/icons/mysql.svg' },
+      { name: 'PostgreSQL', icon: '/icons/postgresql.svg' },
+    ],
+  },
+  {
+    category: 'Herramientas',
+    description: 'Versionado, entornos y despliegue.',
+    items: [
+      { name: 'Git', icon: '/icons/git.svg' },
+      { name: 'GitHub', icon: '/icons/github.svg', invert: true },
+      { name: 'Docker', icon: '/icons/docker.svg' },
+      { name: 'Vercel', icon: '/icons/vercel.svg', invert: true },
+    ],
+  },
 ];
 
 export type Project = {

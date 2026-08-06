@@ -1,21 +1,122 @@
 ---
 import { SKILLS } from '../consts';
+
+// El truco del carrusel infinito: se renderiza la lista DOS veces seguidas.
+// La pista se desplaza -50% (justo el ancho de la primera copia) y al reiniciar
+// la animación el segundo bloque está exactamente donde estaba el primero,
+// así que el salto es invisible.
+const TRACK = [...SKILLS, ...SKILLS];
 ---
 
 <section id="skills" class="mx-auto max-w-5xl px-6 py-20">
-  <h2 class="section-subtitle text-center">Tecnologías que utilizo</h2>
+  <h2 class="section-subtitle text-center">Tecnologías que conozco</h2>
   <p class="mx-auto mb-10 max-w-2xl text-center text-gray-400">
-    Stack con el que construyo aplicaciones web de principio a fin.
+   
   </p>
 
-  <div class="flex flex-wrap justify-center gap-3">
-    {
-      SKILLS.map((s) => (
-        <span class="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-gray-200 transition-colors hover:border-cyan-400/50 hover:text-white">
-          <span aria-hidden="true">{s.icon}</span>
-          {s.name}
-        </span>
-      ))
-    }
+  <div class="marquee">
+    <ul class="marquee__track">
+      {
+        TRACK.map((s, i) => (
+          <li class="marquee__item" aria-hidden={i >= SKILLS.length ? 'true' : undefined}>
+            <img
+              src={s.icon}
+              alt={s.name}
+              width="48"
+              height="48"
+              loading="lazy"
+              decoding="async"
+            />
+            <span class="marquee__label">{s.name}</span>
+          </li>
+        ))
+      }
+    </ul>
   </div>
 </section>
+
+<style>
+  .marquee {
+    overflow: hidden;
+    /* Difumina los bordes para que los iconos entren y salgan sin cortarse */
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 8%,
+      #000 92%,
+      transparent
+    );
+    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  }
+
+  .marquee__track {
+    display: flex;
+    width: max-content;
+    gap: 3rem;
+    padding-block: 0.5rem;
+    animation: marquee-scroll 35s linear infinite;
+  }
+
+  /* Pausa al pasar el mouse: el visitante puede leer los nombres */
+  .marquee:hover .marquee__track {
+    animation-play-state: paused;
+  }
+
+  .marquee__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    width: 5.5rem;
+    opacity: 0.75;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .marquee__item:hover {
+    opacity: 1;
+    transform: translateY(-4px) scale(1.08);
+  }
+
+  .marquee__item img {
+    height: 3rem;
+    width: 3rem;
+    object-fit: contain;
+  }
+
+  .marquee__label {
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: rgb(156 163 175); /* gray-400 */
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  @keyframes marquee-scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      /* La mitad de la pista = una copia completa de SKILLS */
+      transform: translateX(calc(-50% - 1.5rem)); /* -50% menos medio gap */
+    }
+  }
+
+  /* Accesibilidad: sin movimiento si el sistema lo pide */
+  @media (prefers-reduced-motion: reduce) {
+    .marquee {
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+    .marquee__track {
+      animation: none;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+      gap: 1.5rem 2rem;
+    }
+    /* Con la lista estática la copia duplicada sobra */
+    .marquee__item[aria-hidden='true'] {
+      display: none;
+    }
+  }
+</style>
