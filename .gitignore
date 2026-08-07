@@ -28,3 +28,5 @@ pnpm-debug.log*
 venv/
 __pycache__/
 *.pyc
+# artefactos de Windows/WSL en archivos descargados
+*:Zone.Identifier
