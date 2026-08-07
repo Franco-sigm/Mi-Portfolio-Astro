@@ -4,11 +4,37 @@
 @tailwind utilities;
 
 
+/* -------------------------------------------------------------
+   Fondo del sitio: azul marino profundo con resplandor radial,
+   tomado de la identidad visual de surcode.
+   ------------------------------------------------------------- */
+:root {
+  --fondo: #04101f;        /* base, casi negro azulado */
+  --fondo-halo: 7 61 100;  /* azul del resplandor (RGB sin envolver) */
+}
+
 html {
   scroll-behavior: smooth;
+  background-color: var(--fondo);
 }
+
 body {
-  @apply bg-gray-900 text-white;
+  @apply text-white;
+  position: relative;
+}
+
+/* El resplandor va en un pseudo-elemento fijo al viewport en vez de
+   `background-attachment: fixed`, que en iOS repinta en cada scroll.
+   Así el halo queda quieto y el contenido se desliza por encima. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 50% at 72% 38%, rgb(var(--fondo-halo) / 0.75), transparent 72%),
+    radial-gradient(45% 45% at 18% 12%, rgb(6 34 66 / 0.55), transparent 70%);
 }
 
 .scroller{
