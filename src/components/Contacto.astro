@@ -1,27 +1,204 @@
 ---
-import { PROFILE } from '../consts';
+import { METRICS, PROFILE } from '../consts';
+
+// El formulario usa la misma API que las métricas. Sin ella configurada
+// caemos al enlace mailto de siempre, que siempre funciona.
+const apiUrl = METRICS.apiUrl;
 ---
 
-<section id="contacto" class="mx-auto max-w-3xl px-6 py-20 text-center">
-  <h2 class="section-subtitle">¿Trabajamos juntos?</h2>
-  <p class="mx-auto mb-8 max-w-xl text-lg text-gray-300">
+<section id="contacto" class="mx-auto max-w-3xl px-6 py-20">
+  <h2 class="section-subtitle text-center">Enviame un mensaje</h2>
+  <p class="mx-auto mb-10 max-w-xl text-center text-lg text-gray-300">
     Estoy abierto a nuevas oportunidades. Si buscas un desarrollador
-    comprometido y con ganas de crecer, hablemos.
+    comprometido y con ganas de crecer, hablame.
   </p>
 
+  {
+    apiUrl && (
+      <form class="contacto-form mx-auto mb-10 max-w-xl text-left" data-api={apiUrl} novalidate>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label class="mb-1 block text-sm text-gray-300" for="nombre">Nombre</label>
+            <input id="nombre" name="nombre" type="text" required maxlength="120" autocomplete="name" />
+          </div>
+          <div>
+            <label class="mb-1 block text-sm text-gray-300" for="email">Correo</label>
+            <input id="email" name="email" type="email" required maxlength="200" autocomplete="email" />
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <label class="mb-1 block text-sm text-gray-300" for="mensaje">Mensaje</label>
+          <textarea id="mensaje" name="mensaje" rows="5" required maxlength="5000" />
+        </div>
+
+        {/* Trampa para bots: oculta a la vista pero presente en el DOM */}
+        <div class="hp" aria-hidden="true">
+          <label for="web">No rellenar</label>
+          <input id="web" name="web" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <button type="submit" class="btn-primary mt-5 w-full sm:w-auto" data-enviar>
+          Enviar mensaje
+        </button>
+
+        <p class="contacto-aviso mt-4 text-sm" data-aviso role="status" aria-live="polite" />
+      </form>
+    )
+  }
+
   <div class="flex flex-wrap justify-center gap-4">
-    <a href={`mailto:${PROFILE.email}`} class="btn-primary">
+    <a href={`mailto:${PROFILE.email}`} class={apiUrl ? 'btn-outline' : 'btn-primary'}>
       ✉️ Escríbeme un correo
     </a>
-    <a
-      href={PROFILE.linkedin}
-      target="_blank"
-      rel="noopener noreferrer"
-      class="btn-outline"
-    >
+    <a href={PROFILE.linkedin} target="_blank" rel="noopener noreferrer" class="btn-outline">
       Conectar en LinkedIn
     </a>
   </div>
 
-  <p class="mt-6 text-sm text-gray-500">{PROFILE.email}</p>
+  <p class="mt-6 text-center text-sm text-gray-500">{PROFILE.email}</p>
 </section>
+
+<style>
+  .contacto-form input,
+  .contacto-form textarea {
+    width: 100%;
+    border-radius: 0.5rem;
+    border: 1px solid rgb(255 255 255 / 0.1);
+    background: rgb(255 255 255 / 0.05);
+    padding: 0.6rem 0.8rem;
+    color: #fff;
+    font-size: 0.925rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .contacto-form textarea {
+    resize: vertical;
+    min-height: 7rem;
+  }
+
+  /* Chrome pinta los campos autocompletados con su propio fondo claro y
+     rompe el tema oscuro. No se puede sobrescribir `background`, pero sí
+     taparlo con una sombra interior sólida; la transición eterna evita
+     el destello amarillo del primer instante. */
+  .contacto-form input:-webkit-autofill,
+  .contacto-form input:-webkit-autofill:hover,
+  .contacto-form input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #fff;
+    -webkit-box-shadow: 0 0 0 1000px rgb(19 32 50) inset;
+    caret-color: #fff;
+    transition: background-color 9999s ease-in-out 0s;
+  }
+
+  .contacto-form input:focus,
+  .contacto-form textarea:focus {
+    outline: none;
+    border-color: rgb(34 211 238 / 0.6);
+    box-shadow: 0 0 0 3px rgb(34 211 238 / 0.15);
+  }
+
+  /* Campo marcado como inválido tras un intento fallido */
+  .contacto-form [aria-invalid='true'] {
+    border-color: rgb(248 113 113 / 0.7);
+  }
+
+  .contacto-form button[disabled] {
+    opacity: 0.6;
+    cursor: progress;
+  }
+
+  /* El honeypot: fuera de la vista pero no `display:none`,
+     que algunos bots detectan y saltan. */
+  .hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .contacto-aviso:empty {
+    display: none;
+  }
+
+  .contacto-aviso[data-estado='ok'] {
+    color: rgb(74 222 128);
+  }
+
+  .contacto-aviso[data-estado='error'] {
+    color: rgb(248 113 113);
+  }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('.contacto-form');
+
+  if (form) {
+    const api = form.dataset.api!.replace(/\/$/, '');
+    const boton = form.querySelector<HTMLButtonElement>('[data-enviar]')!;
+    const aviso = form.querySelector<HTMLParagraphElement>('[data-aviso]')!;
+    const textoBoton = boton.textContent!;
+
+    const campos = ['nombre', 'email', 'mensaje'].map(
+      (n) => form.elements.namedItem(n) as HTMLInputElement | HTMLTextAreaElement
+    );
+
+    function mostrar(mensaje: string, estado: 'ok' | 'error') {
+      aviso.textContent = mensaje;
+      aviso.dataset.estado = estado;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (boton.disabled) return;
+
+      // Validación en el navegador: evita un viaje al servidor por un
+      // campo vacío. El backend vuelve a validar igual, porque nadie
+      // debería confiar en lo que llega del cliente.
+      let hayError = false;
+      for (const campo of campos) {
+        const vacio = !campo.value.trim();
+        const correoMalo = campo.type === 'email' && !campo.checkValidity();
+        campo.setAttribute('aria-invalid', String(vacio || correoMalo));
+        if (vacio || correoMalo) hayError = true;
+      }
+      if (hayError) {
+        mostrar('Revisa los campos marcados.', 'error');
+        return;
+      }
+
+      boton.disabled = true;
+      boton.textContent = 'Enviando…';
+      aviso.textContent = '';
+
+      try {
+        const res = await fetch(`${api}/api/contact`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nombre: campos[0].value.trim(),
+            email: campos[1].value.trim(),
+            mensaje: campos[2].value.trim(),
+            web: (form.elements.namedItem('web') as HTMLInputElement).value,
+          }),
+        });
+
+        const datos = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(datos.error || 'Error del servidor');
+
+        form.reset();
+        mostrar('¡Mensaje enviado! Te responderé pronto.', 'ok');
+      } catch (err) {
+        mostrar(
+          err instanceof Error && err.message !== 'Failed to fetch'
+            ? err.message
+            : 'No se pudo enviar. Escríbeme directamente por correo.',
+          'error'
+        );
+      } finally {
+        boton.disabled = false;
+        boton.textContent = textoBoton;
+      }
+    });
+  }
+</script>

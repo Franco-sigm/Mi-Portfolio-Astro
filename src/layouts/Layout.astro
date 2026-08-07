@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { SITE } from '../consts';
+import Metricas from '../components/Metricas.astro';
 
 interface Props {
   title?: string;
@@ -47,5 +48,6 @@ const ogImage = new URL('/og-image.png', SITE.url).href;
   </head>
   <body class="antialiased">
     <slot />
+    <Metricas />
   </body>
 </html>

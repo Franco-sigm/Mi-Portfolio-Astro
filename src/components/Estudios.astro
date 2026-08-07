@@ -1,31 +1,80 @@
 ---
+import { Image } from 'astro:assets';
 import { CERTIFICATES } from '../consts';
+import titulo from '../assets/cert-titulo.jpg';
+import desarrolloWeb from '../assets/cert-desarrollo-web.jpg';
+import progAvanzada from '../assets/cert-prog-avanzada.jpg';
+import progYBd from '../assets/cert-prog-y-bd.jpg';
+import medalla from '../assets/medalla.png';
+
+// Las claves coinciden con el campo `image` de CERTIFICATES en consts.ts
+const images = { titulo, desarrolloWeb, progAvanzada, progYBd };
 ---
 
 <section id="estudios" class="mx-auto max-w-5xl px-6 py-20">
   <h2 class="section-subtitle text-center">Formación y Certificados</h2>
   <p class="mx-auto mb-10 max-w-2xl text-center text-gray-400">
-    Formación que respalda mis habilidades. Cada certificado es verificable.
+    Formación que respalda mis habilidades.
   </p>
 
-  <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+  <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
     {
-      CERTIFICATES.map((c) => (
-        <article class="card flex flex-col transition-transform duration-300 hover:scale-[1.03]">
+      CERTIFICATES.map((c, i) => (
+        <article
+          class:list={[
+            'card group relative isolate flex flex-col overflow-hidden transition-transform duration-300 hover:scale-[1.03]',
+            // El título profesional encabeza y se distingue del resto
+            i === 0 && 'ring-1 ring-cyan-400/30',
+          ]}
+        >
+          {/* El certificado de fondo: apenas visible, se aclara al pasar el mouse */}
+          <Image
+            src={images[c.image]}
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+            class="pointer-events-none absolute inset-0 -z-10 h-full w-full object-cover object-top opacity-[0.07] transition-opacity duration-500 group-hover:opacity-[0.16]"
+          />
+          {/* Velo oscuro para que el texto siga siendo legible encima */}
+          <div
+            class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-br from-[#04101f]/85 via-[#04101f]/70 to-[#04101f]/90"
+            aria-hidden="true"
+          />
+
+          {/* Detalle decorativo: la medalla asoma en la esquina superior derecha */}
+          <Image
+            src={medalla}
+            alt=""
+            aria-hidden="true"
+            width={112}
+            height={112}
+            loading="lazy"
+            class="pointer-events-none absolute right-4 top-4 h-14 w-14 object-contain opacity-80 drop-shadow-[0_2px_6px_rgba(0,0,0,0.45)] transition-transform duration-300 group-hover:scale-110"
+          />
+
           <div class="flex flex-grow flex-col p-6">
-            <h3 class="mb-1 text-xl font-bold text-white">{c.title}</h3>
+            {i === 0 && (
+              <span class="mb-2 self-start rounded-full bg-cyan-400/10 px-2.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-cyan-400">
+                Título profesional
+              </span>
+            )}
+            {/* pr-16 evita que el título pase por debajo de la medalla */}
+            <h3 class="mb-1 pr-16 text-xl font-bold text-white">{c.title}</h3>
             <p class="mb-4 font-semibold text-yellow">{c.institution}</p>
             <p class="mb-6 flex-grow text-sm text-gray-400">{c.description}</p>
-            <div class="mt-auto">
-              <a
-                href={c.pdf}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="badge-green justify-center"
-              >
-                Ver Certificado
-              </a>
-            </div>
+
+            {c.pdf && (
+              <div class="mt-auto">
+                <a
+                  href={c.pdf}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="badge-green justify-center"
+                >
+                  Ver Certificado
+                </a>
+              </div>
+            )}
           </div>
         </article>
       ))

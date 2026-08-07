@@ -1,100 +1,271 @@
 ---
 import { METRICS } from '../consts';
 
-// Sin URL de API no renderizamos nada: mejor un footer limpio que
-// un contador roto mientras el backend no esté desplegado.
+// Sin URL de API no renderizamos nada: mejor sin dock que con un
+// contador roto mientras el backend no esté desplegado.
 const enabled = Boolean(METRICS.apiUrl);
 ---
 
 {
   enabled && (
-    <div
-      class="metricas"
-      data-api={METRICS.apiUrl}
-      hidden
-      aria-label="Métricas del sitio"
-    >
-      <span class="metricas__visitas" title="Visitas al sitio">
-        <svg
-          class="h-4 w-4"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.8"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
+    <aside class="dock" data-api={METRICS.apiUrl} hidden aria-label="Métricas del sitio">
+      <div class="pastilla pastilla--visitas" data-tip="visitas">
+        <svg class="ojo" viewBox="0 0 24 24" aria-hidden="true">
+          {/* Ojo abierto: almendra blanca + pupila del color del botón */}
+          <g class="ojo__abierto">
+            <path
+              class="ojo__almendra"
+              d="M12 5C7.36 5 3.42 8.01 2.04 12.18a1.01 1.01 0 000 .64C3.42 16.99 7.36 20 12 20s8.58-3.01 9.96-7.18a1.01 1.01 0 000-.64C20.58 8.01 16.64 5 12 5z"
+            />
+            <circle class="ojo__pupila" cx="12" cy="12.5" r="3.4" />
+          </g>
+          {/* Ojo cerrado: solo el párpado curvo */}
           <path
+            class="ojo__cerrado"
+            d="M3.5 11.5c2.2 3 5.2 4.6 8.5 4.6s6.3-1.6 8.5-4.6"
+            fill="none"
+            stroke-width="2.1"
             stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
           />
-          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
         </svg>
-        <span data-visitas aria-live="polite">–</span>
+        <span class="pastilla__num" data-visitas aria-live="polite">–</span>
         <span class="sr-only">visitas</span>
-      </span>
+      </div>
 
-      <button type="button" class="metricas__like" data-like aria-pressed="false">
-        <svg class="metricas__corazon h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
+      <button
+        type="button"
+        class="pastilla pastilla--like"
+        data-tip="me gusta"
+        data-like
+        aria-pressed="false"
+      >
+        <span class="chispas" aria-hidden="true">
+          <i /><i /><i /><i /><i /><i />
+        </span>
+        <svg class="corazon" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
         </svg>
-        <span data-corazones aria-live="polite">–</span>
+        <span class="pastilla__num" data-corazones aria-live="polite">–</span>
         <span class="sr-only">me gusta</span>
       </button>
-    </div>
+    </aside>
   )
 }
 
 <style>
-  .metricas {
+  /* El atributo `hidden` lo aplica el navegador con `display:none`, pero
+     cualquier regla de autor (nuestro `display:flex`) le gana por origen
+     en la cascada. Sin esto el dock se vería antes de que la API conteste. */
+  .dock[hidden] {
+    display: none;
+  }
+
+  /* ---------------------------------------------------------------
+     Dos botones circulares apilados, fijos al costado izquierdo y
+     siempre visibles durante el scroll.
+     --------------------------------------------------------------- */
+  .dock {
+    position: fixed;
+    left: 1.5rem;
+    top: 50%;
+    z-index: 40;
+
     display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+
+    /* Entrada: se desliza desde fuera de pantalla */
+    transform: translateY(-50%) translateX(-160%);
+    opacity: 0;
+    animation: dock-entra 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.4s forwards;
+  }
+
+  @keyframes dock-entra {
+    to {
+      transform: translateY(-50%) translateX(0);
+      opacity: 1;
+    }
+  }
+
+  /* --- la pastilla circular --- */
+  .pastilla {
+    position: relative;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 1rem;
-    font-size: 0.875rem;
+    justify-content: center;
+    gap: 0.05rem;
+
+    height: 3.5rem;
+    width: 3.5rem;
+    border-radius: 9999px;
+
+    box-shadow: 0 6px 18px rgb(0 0 0 / 0.35);
+    transition: transform 0.25s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .pastilla:hover {
+    transform: scale(1.08);
+  }
+
+  .pastilla__num {
+    font-size: 0.65rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    letter-spacing: 0.01em;
+  }
+
+  /* Etiqueta que asoma al pasar el mouse */
+  .pastilla::after {
+    content: attr(data-tip);
+    position: absolute;
+    left: calc(100% + 0.7rem);
+    top: 50%;
+    transform: translateY(-50%) translateX(-0.35rem);
+
+    padding: 0.25rem 0.6rem;
+    border-radius: 0.375rem;
+    border: 1px solid rgb(255 255 255 / 0.1);
+    background: rgb(4 16 31 / 0.95); /* var(--fondo) */
+    color: rgb(229 231 235);
+    font-size: 0.7rem;
+    font-weight: 500;
+    white-space: nowrap;
+
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .pastilla:hover::after {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+
+  /* --- visitas: círculo relleno, acento del sitio --- */
+  .pastilla--visitas {
+    background: rgb(8 145 178); /* cyan-600 */
+    color: #fff;
+  }
+
+  .ojo {
+    height: 1.5rem;
+    width: 1.5rem;
+    overflow: visible;
+  }
+
+  .ojo__abierto {
+    transform-origin: 12px 12.5px;
+    animation: ojo-abre 5.5s ease-in-out infinite;
+  }
+
+  .ojo__almendra {
+    fill: #fff;
+  }
+
+  /* La pupila va del color del fondo: parece un recorte en la almendra */
+  .ojo__pupila {
+    fill: rgb(8 145 178);
+  }
+
+  .ojo__cerrado {
+    stroke: #fff;
+    opacity: 0;
+    animation: ojo-cierra 5.5s ease-in-out infinite;
+  }
+
+  /* El parpadeo: la almendra se aplasta y aparece el párpado curvo.
+     Ocupa ~4% del ciclo, así que es un pestañeo rápido cada 5,5 s. */
+  @keyframes ojo-abre {
+    0%,
+    92%,
+    100% {
+      opacity: 1;
+      transform: scaleY(1);
+    }
+    94%,
+    97% {
+      opacity: 0;
+      transform: scaleY(0.1);
+    }
+  }
+
+  @keyframes ojo-cierra {
+    0%,
+    92%,
+    100% {
+      opacity: 0;
+    }
+    94%,
+    97% {
+      opacity: 1;
+    }
+  }
+
+  /* Al pasar el mouse, guiña al instante */
+  .pastilla--visitas:hover .ojo__abierto {
+    animation: guino 0.45s ease-in-out;
+  }
+
+  .pastilla--visitas:hover .ojo__cerrado {
+    animation: guino-parpado 0.45s ease-in-out;
+  }
+
+  @keyframes guino {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scaleY(1);
+    }
+    45%,
+    62% {
+      opacity: 0;
+      transform: scaleY(0.1);
+    }
+  }
+
+  @keyframes guino-parpado {
+    0%,
+    100% {
+      opacity: 0;
+    }
+    45%,
+    62% {
+      opacity: 1;
+    }
+  }
+
+  /* --- corazón: círculo apagado que se enciende al dar like --- */
+  .pastilla--like {
+    background: rgb(255 255 255 / 0.07);
+    border: 1px solid rgb(255 255 255 / 0.08);
     color: rgb(156 163 175); /* gray-400 */
   }
 
-  .metricas__visitas,
-  .metricas__like {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-  }
-
-  .metricas__like {
-    border-radius: 9999px;
-    border: 1px solid rgb(255 255 255 / 0.1);
-    padding: 0.25rem 0.75rem;
-    color: inherit;
-    transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
-  }
-
-  .metricas__like:hover:not(:disabled) {
+  .pastilla--like:hover:not(:disabled) {
     color: rgb(248 113 113); /* red-400 */
-    border-color: rgb(248 113 113 / 0.4);
+    background: rgb(248 113 113 / 0.12);
   }
 
-  .metricas__like:disabled {
+  .pastilla--like[aria-pressed='true'] {
+    background: rgb(220 38 38); /* red-600 */
+    color: #fff;
+    box-shadow: 0 6px 20px rgb(220 38 38 / 0.4);
+  }
+
+  .pastilla--like:disabled {
     cursor: default;
-    color: rgb(248 113 113);
-    border-color: rgb(248 113 113 / 0.4);
   }
 
-  /* Corazón vacío por defecto, relleno cuando ya diste like */
-  .metricas__corazon {
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1.6;
-    transition: fill 0.2s ease;
-  }
-
-  .metricas__like[aria-pressed='true'] .metricas__corazon {
+  .corazon {
+    height: 1.45rem;
+    width: 1.45rem;
     fill: currentColor;
   }
 
-  /* Golpecito al pulsar */
-  .metricas__like.is-latiendo .metricas__corazon {
-    animation: latido 0.45s ease;
+  .pastilla--like.is-latiendo .corazon {
+    animation: latido 0.5s ease;
   }
 
   @keyframes latido {
@@ -102,16 +273,112 @@ const enabled = Boolean(METRICS.apiUrl);
     100% {
       transform: scale(1);
     }
-    35% {
+    30% {
       transform: scale(1.35);
     }
-    70% {
-      transform: scale(0.95);
+    60% {
+      transform: scale(0.92);
+    }
+  }
+
+  /* --- chispas que salen disparadas al dar like --- */
+  .chispas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+  }
+
+  .chispas i {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 9999px;
+    background: rgb(248 113 113);
+    opacity: 0;
+  }
+
+  .chispas i:nth-child(1) { --ang: -90deg; }
+  .chispas i:nth-child(2) { --ang: -30deg; }
+  .chispas i:nth-child(3) { --ang: 30deg; }
+  .chispas i:nth-child(4) { --ang: 90deg; }
+  .chispas i:nth-child(5) { --ang: 150deg; }
+  .chispas i:nth-child(6) { --ang: 210deg; }
+
+  .pastilla--like.is-latiendo .chispas i {
+    animation: chispa 0.6s ease-out forwards;
+  }
+
+  @keyframes chispa {
+    0% {
+      opacity: 1;
+      transform: rotate(var(--ang)) translateX(0) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: rotate(var(--ang)) translateX(30px) scale(0.3);
+    }
+  }
+
+  /* ---------------------------------------------------------------
+     Pantallas angostas: los botones chocarían con el contenido,
+     así que bajan a la esquina inferior izquierda en horizontal.
+     --------------------------------------------------------------- */
+  @media (max-width: 1023px) {
+    .dock {
+      flex-direction: row;
+      gap: 0.65rem;
+      top: auto;
+      bottom: 1rem;
+      left: 1rem;
+      transform: translateX(-160%);
+      animation-name: dock-entra-movil;
+    }
+
+    @keyframes dock-entra-movil {
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .pastilla {
+      height: 3rem;
+      width: 3rem;
+    }
+
+    /* El tooltip lateral no cabe: se muestra arriba */
+    .pastilla::after {
+      left: 50%;
+      top: auto;
+      bottom: calc(100% + 0.5rem);
+      transform: translateX(-50%) translateY(0.35rem);
+    }
+
+    .pastilla:hover::after {
+      transform: translateX(-50%) translateY(0);
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .metricas__like.is-latiendo .metricas__corazon {
+    .dock {
+      animation-duration: 0.01ms;
+      animation-delay: 0ms;
+      transform: translateY(-50%) translateX(0);
+      opacity: 1;
+    }
+
+    .pastilla:hover {
+      transform: none;
+    }
+
+    .ojo__abierto,
+    .ojo__cerrado,
+    .pastilla--visitas:hover .ojo__abierto,
+    .pastilla--visitas:hover .ojo__cerrado,
+    .pastilla--like.is-latiendo .corazon,
+    .pastilla--like.is-latiendo .chispas i {
       animation: none;
     }
   }
@@ -130,7 +397,7 @@ const enabled = Boolean(METRICS.apiUrl);
 </style>
 
 <script>
-  const caja = document.querySelector<HTMLElement>('.metricas');
+  const caja = document.querySelector<HTMLElement>('.dock');
 
   if (caja) {
     const api = caja.dataset.api!.replace(/\/$/, '');
@@ -141,7 +408,14 @@ const enabled = Boolean(METRICS.apiUrl);
     const YA_VISITO = 'portfolio:visita-contada';
     const YA_DIO_LIKE = 'portfolio:like-dado';
 
-    const formatear = (n: number) => n.toLocaleString('es-CL');
+    // Notación compacta estilo "1.9K" / "1.2M" para que quepa en el círculo.
+    // Va en en-US a propósito: es-CL da "1,9 K" (con espacio) y alterna
+    // mayúscula y minúscula según la magnitud. Bajo mil no se usa.
+    const compacto = new Intl.NumberFormat('en-US', {
+      notation: 'compact',
+      maximumFractionDigits: 1,
+    });
+    const formatear = (n: number) => (n < 1000 ? String(n) : compacto.format(n));
 
     async function pedir(ruta: string, metodo: 'GET' | 'POST' = 'GET') {
       const res = await fetch(`${api}${ruta}`, { method: metodo });
@@ -149,10 +423,31 @@ const enabled = Boolean(METRICS.apiUrl);
       return res.json();
     }
 
+    // Cuenta ascendente: el número trepa hasta su valor en vez de aparecer seco.
+    function animarHasta(el: HTMLElement, destino: number) {
+      const sinMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (sinMovimiento || destino === 0) {
+        el.textContent = formatear(destino);
+        return;
+      }
+
+      const duracion = 900;
+      const inicio = performance.now();
+
+      const paso = (ahora: number) => {
+        const avance = Math.min((ahora - inicio) / duracion, 1);
+        const suave = 1 - Math.pow(1 - avance, 3); // easing suave al final
+        el.textContent = formatear(Math.round(destino * suave));
+        if (avance < 1) requestAnimationFrame(paso);
+      };
+
+      requestAnimationFrame(paso);
+    }
+
     function marcarComoYaDado() {
       boton.setAttribute('aria-pressed', 'true');
       boton.disabled = true;
-      boton.title = 'Ya diste tu corazón. ¡Gracias!';
+      boton.dataset.tip = '¡gracias!';
     }
 
     async function iniciar() {
@@ -166,41 +461,50 @@ const enabled = Boolean(METRICS.apiUrl);
 
       if (primeraDeLaSesion) sessionStorage.setItem(YA_VISITO, '1');
 
-      salidaVisitas.textContent = formatear(datos.visitas);
-      salidaCorazones.textContent = formatear(datos.corazones);
-
       if (localStorage.getItem(YA_DIO_LIKE)) marcarComoYaDado();
 
-      // Solo ahora mostramos el bloque: si algo falló, nunca se ve.
+      // Guardamos el total real: el texto puede quedar compacto ("1,9 mil")
+      // y no serviría para calcular el siguiente valor al dar like.
+      boton.dataset.valor = String(datos.corazones);
+
+      // Solo ahora mostramos el dock: si algo falló, nunca se ve.
       caja.hidden = false;
+      animarHasta(salidaVisitas, datos.visitas);
+      animarHasta(salidaCorazones, datos.corazones);
     }
 
     boton.addEventListener('click', async () => {
       if (boton.disabled) return;
 
-      // Respuesta inmediata: no esperamos al servidor para dar feedback.
-      const previo = Number(salidaCorazones.textContent!.replace(/\D/g, '')) || 0;
-      salidaCorazones.textContent = formatear(previo + 1);
+      // El texto puede venir compacto ("1,9 mil"), así que guardamos el
+      // valor numérico aparte en vez de intentar re-parsear la etiqueta.
+      const previo = Number(boton.dataset.valor ?? 0);
+      const nuevo = previo + 1;
+
+      salidaCorazones.textContent = formatear(nuevo);
+      boton.dataset.valor = String(nuevo);
       marcarComoYaDado();
+
+      boton.classList.remove('is-latiendo');
+      void boton.offsetWidth; // reinicia la animación si se repite
       boton.classList.add('is-latiendo');
-      boton.addEventListener('animationend', () => boton.classList.remove('is-latiendo'), {
-        once: true,
-      });
 
       try {
         const datos = await pedir('/api/like', 'POST');
         salidaCorazones.textContent = formatear(datos.corazones);
+        boton.dataset.valor = String(datos.corazones);
         localStorage.setItem(YA_DIO_LIKE, '1');
       } catch {
         // Falló el servidor: deshacemos el optimismo.
         salidaCorazones.textContent = formatear(previo);
+        boton.dataset.valor = String(previo);
         boton.setAttribute('aria-pressed', 'false');
         boton.disabled = false;
-        boton.title = 'No se pudo registrar. Inténtalo de nuevo.';
+        boton.dataset.tip = 'reintentar';
       }
     });
 
-    // Si la API no responde, el bloque se queda oculto y el footer
+    // Si la API no responde, el dock se queda oculto y la página
     // se ve como si nunca hubiera existido.
     iniciar().catch(() => {});
   }
