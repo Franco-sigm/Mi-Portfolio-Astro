@@ -1,0 +1,341 @@
+---
+import { Image } from 'astro:assets';
+import { GITHUB, TECH_ICONS } from '../consts';
+import avatar from '../assets/github-avatar.png';
+
+// Partimos el titular en palabras y cada palabra en letras, llevando un
+// índice corrido para escalonar el encendido. Se agrupa por palabra para
+// que el salto de línea nunca parta una palabra por la mitad.
+let n = 0;
+const palabras = GITHUB.headline.split(' ').map((palabra, i, todas) => ({
+  letras: [...palabra].map((letra) => ({ letra, i: n++ })),
+  espacio: i < todas.length - 1 ? n++ : null,
+}));
+---
+
+<section id="github" class="mx-auto max-w-5xl px-6 py-20">
+  <div class="muro">
+    <div class="muro__vineta" aria-hidden="true"></div>
+
+    {/* Logo colgado en la pared, trazado como un tubo de neón */}
+    <svg class="logo-neon" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.168 6.839 9.492.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.942.359.308.678.92.678 1.852 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z"
+      ></path>
+    </svg>
+
+    <div
+      class="relative flex flex-col items-center gap-8 p-8 text-center sm:p-12 md:flex-row md:items-center md:gap-10 md:text-left"
+    >
+      <div class="marco-neon shrink-0">
+        <Image
+          src={avatar}
+          alt={`Foto de perfil de ${GITHUB.user} en GitHub`}
+          width={224}
+          height={224}
+          class="h-28 w-28 rounded-full object-cover sm:h-32 sm:w-32"
+        />
+      </div>
+
+      <div class="flex-1">
+        <p class="neon-cian mb-2 font-mono text-sm">@{GITHUB.user}</p>
+
+        {/* El texto real va en aria-label: un lector de pantalla leería
+            las letras sueltas de una en una si le dejáramos los spans. */}
+        <h2
+          class="titulo-neon neon-celeste mb-4 text-3xl font-bold italic tracking-wide sm:text-4xl"
+          aria-label={GITHUB.headline}
+        >
+          {
+            palabras.map((palabra) => (
+              <span class="palabra" aria-hidden="true">
+                {palabra.letras.map(({ letra, i }) => (
+                  <span style={`--i:${i}`}>{letra}</span>
+                ))}
+                {palabra.espacio !== null && <span style={`--i:${palabra.espacio}`}>&nbsp;</span>}
+              </span>
+            ))
+          }
+        </h2>
+
+        <p class="mb-6 text-sm leading-relaxed text-gray-300/90 sm:text-base">
+          {GITHUB.bio}
+        </p>
+
+        <div class="mb-8 flex flex-wrap justify-center gap-2 md:justify-start">
+          {
+            GITHUB.languages.map((lenguaje) => {
+              const tech = TECH_ICONS[lenguaje];
+              return (
+                <span class="tech-tag !border-white/15 !bg-black/40">
+                  {tech && (
+                    <img
+                      src={tech.icon}
+                      alt=""
+                      aria-hidden="true"
+                      width="16"
+                      height="16"
+                      loading="lazy"
+                      class:list={['h-4 w-4 object-contain', tech.invert && 'icon-invert']}
+                    />
+                  )}
+                  {lenguaje}
+                </span>
+              );
+            })
+          }
+        </div>
+
+        <a
+          href={GITHUB.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-neon inline-flex items-center gap-2"
+        >
+          <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              fill-rule="evenodd"
+              d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.168 6.839 9.492.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.942.359.308.678.92.678 1.852 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z"
+              clip-rule="evenodd"></path>
+          </svg>
+          Seguir en GitHub
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ---------------------------------------------------------------
+     El muro. El patrón de ladrillos va como SVG incrustado en la
+     propia hoja de estilos: pesa unos 400 bytes, se repite sin
+     costuras y evita cargar una foto de varios cientos de KB.
+     Las filas van trabadas (aparejo a soga), como un muro real.
+     --------------------------------------------------------------- */
+  .muro {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+    border: 1px solid rgb(255 255 255 / 0.08);
+    background-color: #170f16;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='60'%3E%3Crect width='120' height='60' fill='%23140d14'/%3E%3Cg fill='%23231825'%3E%3Crect x='1' y='1' width='57' height='27'/%3E%3Crect x='62' y='1' width='57' height='27'/%3E%3Crect x='-28' y='32' width='57' height='27'/%3E%3Crect x='33' y='32' width='57' height='27'/%3E%3Crect x='94' y='32' width='57' height='27'/%3E%3C/g%3E%3C/svg%3E");
+    box-shadow: 0 20px 50px rgb(0 0 0 / 0.45);
+  }
+
+  /* Viñeta: oscurece las esquinas y concentra la luz en el centro,
+     que es lo que hace que un cartel de neón parezca iluminar. */
+  .muro__vineta {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse at 50% 45%, rgb(34 211 238 / 0.16), transparent 55%),
+      radial-gradient(ellipse at 50% 50%, transparent 35%, rgb(0 0 0 / 0.75));
+  }
+
+  /* --- el logo colgado en la pared --- */
+  /* Sin relleno y solo con trazo: así el contorno del gato se lee como
+     un tubo de neón doblado, no como una silueta pintada. El resplandor
+     va con drop-shadow en capas, que es el equivalente del text-shadow
+     para formas SVG. */
+  .logo-neon {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.75rem;
+    width: 5.5rem;
+    height: 5.5rem;
+    fill: none;
+    stroke: #eafcff;
+    stroke-width: 0.55;
+    opacity: 0.75;
+    pointer-events: none;
+    filter:
+      drop-shadow(0 0 3px #fff)
+      drop-shadow(0 0 8px #22d3ee)
+      drop-shadow(0 0 18px #22d3ee);
+    /* Desfasado respecto al titular para que no titilen a la vez */
+    animation: parpadeo-neon 4s 1.3s infinite;
+  }
+
+  /* En pantallas angostas el logo se cruzaría con el texto */
+  @media (max-width: 767px) {
+    .logo-neon {
+      width: 3.5rem;
+      height: 3.5rem;
+      top: 1rem;
+      right: 1rem;
+      opacity: 0.4;
+    }
+  }
+
+  /* --- el neón --- */
+  /* Un tubo de neón real tiene un núcleo blanco casi cegado y el color
+     solo aparece en el halo. Por eso las primeras sombras son blancas
+     y las de color van después, cada vez más abiertas. */
+  .neon-celeste {
+    color: #fff;
+    text-shadow:
+      0 0 4px #fff,
+      0 0 10px #fff,
+      0 0 20px #22d3ee,
+      0 0 38px #22d3ee,
+      0 0 70px #0891b2;
+  }
+
+  /* --- encendido letra a letra --- */
+  .palabra {
+    white-space: nowrap; /* el salto de línea no parte palabras */
+  }
+
+  .titulo-neon span span {
+    display: inline-block;
+    opacity: 0;
+  }
+
+  /* La clase la pone el script cuando la sección entra en pantalla.
+     Si arrancara al cargar la página, la animación se habría acabado
+     mucho antes de que el visitante llegue hasta aquí. */
+  /* Ciclo de 3 s que se repite. Como todas las letras comparten
+     duración pero no retardo, la reposición viaja de izquierda a
+     derecha: se ve una onda recorriendo el cartel, no un apagón. */
+  .titulo-neon.encendido span span {
+    animation: encender 3s infinite;
+    animation-delay: calc(var(--i) * 65ms);
+  }
+
+  /* La letra pasa el 85 % del ciclo encendida. El chispazo de arranque
+     ocupa solo el tramo inicial, y el apagado previo al siguiente ciclo
+     es muy corto para que el texto siga siendo legible. */
+  @keyframes encender {
+    0% {
+      opacity: 0;
+    }
+    4% {
+      opacity: 1;
+    }
+    7% {
+      opacity: 0.25;
+    }
+    10% {
+      opacity: 1;
+    }
+    13% {
+      opacity: 0.6;
+    }
+    16%,
+    93% {
+      opacity: 1;
+    }
+    97%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  /* Titileo del cartel completo, ahora más seguido (antes cada 7 s) */
+  .titulo-neon.encendido {
+    animation: parpadeo-neon 3s infinite;
+  }
+
+  .neon-cian {
+    color: #eafcff;
+    text-shadow:
+      0 0 4px #fff,
+      0 0 12px #22d3ee,
+      0 0 26px #22d3ee;
+  }
+
+  /* Titileo de tubo gastado: casi todo el ciclo encendido, con dos
+     bajones muy breves. Un parpadeo constante marearía. */
+  @keyframes parpadeo-neon {
+    0%,
+    92%,
+    96%,
+    100% {
+      opacity: 1;
+    }
+    93%,
+    95% {
+      opacity: 0.55;
+    }
+    94% {
+      opacity: 0.82;
+    }
+  }
+
+  /* --- el marco del avatar, como un retrato iluminado del local --- */
+  .marco-neon {
+    position: relative;
+    border-radius: 9999px;
+    padding: 4px;
+    background: linear-gradient(140deg, #67e8f9, #0891b2);
+    box-shadow:
+      0 0 14px rgb(34 211 238 / 0.55),
+      0 0 34px rgb(34 211 238 / 0.35);
+  }
+
+  .marco-neon :global(img) {
+    display: block;
+    border-radius: 9999px;
+  }
+
+  /* --- el botón, como el letrero de "abierto" --- */
+  .btn-neon {
+    border-radius: 0.5rem;
+    border: 1px solid rgb(34 211 238 / 0.55);
+    background: rgb(0 0 0 / 0.45);
+    padding: 0.625rem 1.35rem;
+    font-weight: 600;
+    color: #fff;
+    text-shadow: 0 0 8px rgb(34 211 238 / 0.9);
+    box-shadow:
+      0 0 12px rgb(34 211 238 / 0.28),
+      inset 0 0 12px rgb(34 211 238 / 0.14);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+  }
+
+  .btn-neon:hover {
+    border-color: rgb(34 211 238 / 0.9);
+    box-shadow:
+      0 0 24px rgb(34 211 238 / 0.55),
+      inset 0 0 18px rgb(34 211 238 / 0.25);
+    transform: translateY(-2px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* Sin movimiento: el cartel aparece encendido y quieto */
+    .titulo-neon.encendido,
+    .titulo-neon.encendido span span,
+    .logo-neon {
+      animation: none;
+    }
+    .titulo-neon span span {
+      opacity: 1;
+    }
+    .btn-neon:hover {
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  const titulo = document.querySelector<HTMLElement>('.titulo-neon');
+
+  if (titulo) {
+    // Arranca el encendido solo cuando el cartel entra en pantalla, para
+    // que el visitante lo vea prender en vez de encontrarlo ya encendido.
+    const observador = new IntersectionObserver(
+      (entradas) => {
+        for (const entrada of entradas) {
+          if (entrada.isIntersecting) {
+            titulo.classList.add('encendido');
+            observador.disconnect(); // una sola vez
+          }
+        }
+      },
+      { threshold: 0.4 }
+    );
+
+    observador.observe(titulo);
+  }
+</script>

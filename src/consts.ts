@@ -16,8 +16,16 @@ export const PROFILE = {
   name: 'Franco Cañete Herrera',
   role: 'Desarrollador Web Full-Stack junior y Técnico en Nivel Superior en Análisis y Programación Computacional',
   // Frase de gancho: lo primero que lee un reclutador
-  tagline:
-    'Transformo ideas en aplicaciones web rápidas y funcionales. Especializado en desarrollo full-stack con JavaScript, Node.js y Python.',
+  tagline: 
+     `Hola, soy Franco Cañete, desarollador full stack enfocado en backend con Python y el ecosistema de FasApi. Me enfoco en desarrollar arquitecturas
+     escalables y seguras.
+     
+     En frontend me gusta trabajar con Astro y React, y en diseño de interfaces con Tailwind CSS.
+     estoy siempre aprendiendo a traves del desarrollo de Poyectos fullstack para mejorar constantemente mis habilidades.
+     `,
+}
+
+export const CONTACT = {
   location: 'Chile',
   email: 'americansima29@gmail.com', // 👈 cámbialo si usas otro email profesional
   cvPath: '/cv-franco-canete.pdf',    // 👈 sube tu CV a /public con este nombre
@@ -107,6 +115,48 @@ export const STACK: {
 ];
 
 // -------------------------------------------------------------
+//  GITHUB: invitación a seguir el perfil.
+//  El avatar vive en src/assets/github-avatar.png. Si algún día
+//  cambias tu foto de GitHub, vuelve a descargarla desde
+//  https://github.com/Franco-sigm.png
+// -------------------------------------------------------------
+export const GITHUB = {
+  user: 'Franco-sigm',
+  url: 'https://github.com/Franco-sigm',
+  headline: 'Sígueme en GitHub',
+  bio: 'Técnico en Análisis y Programación Computacional y estudiante de Ingeniería en Informática. Me interesa el ciclo completo del desarrollo: del diseño de la arquitectura a dejar el producto funcionando en producción.',
+  // Lenguajes que más aparecen en tus repos, para las etiquetas
+  languages: ['Python', 'JavaScript', 'Astro'],
+};
+
+// -------------------------------------------------------------
+//  Logo de cada tecnología, para las etiquetas de los proyectos.
+//  La clave debe coincidir EXACTAMENTE con el texto del tag.
+//  Un tag sin entrada aquí (p. ej. 'SEO') se muestra solo con texto.
+//  `invert: true` → logo negro que se pinta de blanco.
+// -------------------------------------------------------------
+export const TECH_ICONS: Record<string, { icon: string; invert?: boolean }> = {
+  Astro: { icon: '/icons/astro.svg' },
+  'CSS3': { icon: '/icons/css3.svg' },
+  Docker: { icon: '/icons/docker.svg' },
+  FastAPI: { icon: '/icons/fastapi.svg' },
+  Flask: { icon: '/icons/flask.svg', invert: true },
+  Git: { icon: '/icons/git.svg' },
+  HTML5: { icon: '/icons/html5.svg' },
+  JavaScript: { icon: '/icons/javascript.svg' },
+  MySQL: { icon: '/icons/mysql.svg' },
+  'Node.js': { icon: '/icons/nodejs.svg' },
+  PostgreSQL: { icon: '/icons/postgresql.svg' },
+  Python: { icon: '/icons/python.svg' },
+  React: { icon: '/icons/react.svg' },
+  SQLAlchemy: { icon: '/icons/sqlalchemy.svg', invert: true },
+  Tailwind: { icon: '/icons/tailwindcss.svg' },
+  'Tailwind CSS': { icon: '/icons/tailwindcss.svg' },
+  TypeScript: { icon: '/icons/typescript.svg' },
+  Vite: { icon: '/icons/vitejs.svg' },
+};
+
+// -------------------------------------------------------------
 //  PROYECTOS: cada uno es un mini caso de estudio, no una ficha.
 //  El orden importa — el primero es el que más se mira.
 //  `image: null` → se muestra un marcador con el dominio hasta que
@@ -131,7 +181,17 @@ export const PROJECTS: Project[] = [
     description:
       'Lo construí para la administración de la Comunidad Parque Suizo 900: centraliza el control de pagos, el registro de ingresos y gastos, y la comunicación con los residentes. Al ver que el mismo problema se repetía en otros condominios, lo estoy convirtiendo en un producto SaaS.',
     image: 'condominio',
-    tags: ['Vite', 'JavaScript', 'Tailwind', 'Node.js', 'MySQL'],
+    tags: [
+      'Vite',
+      'JavaScript',
+      'Tailwind',
+      'Node.js',
+      'Python',
+      'FastAPI',
+      'SQLAlchemy',
+      'Pydantic',
+      'PostgreSQL',
+    ],
     links: [
       // 👈 cambia esta URL por el enlace directo a la demo gratuita
       { label: 'Probar demo gratis', url: 'https://conadmin.cl', primary: true },

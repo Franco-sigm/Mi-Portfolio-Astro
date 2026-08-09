@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import { PROJECTS } from '../consts';
+import { PROJECTS, TECH_ICONS } from '../consts';
 import portafolio from '../assets/portafolio.png';
 import condominio from '../assets/condominio.png';
 import surcode from '../assets/surcode.png';
@@ -47,9 +47,26 @@ const images = { portafolio, condominio, surcode };
               <p class="mb-5 text-gray-400">{p.description}</p>
 
               <div class="mb-6 flex flex-wrap gap-2">
-                {p.tags.map((t) => (
-                  <span class="tech-tag">{t}</span>
-                ))}
+                {p.tags.map((t) => {
+                  // Un tag sin logo (como 'SEO') se muestra solo con texto
+                  const tech = TECH_ICONS[t];
+                  return (
+                    <span class="tech-tag">
+                      {tech && (
+                        <img
+                          src={tech.icon}
+                          alt=""
+                          aria-hidden="true"
+                          width="16"
+                          height="16"
+                          loading="lazy"
+                          class:list={['h-4 w-4 object-contain', tech.invert && 'icon-invert']}
+                        />
+                      )}
+                      {t}
+                    </span>
+                  );
+                })}
               </div>
 
               <div class="flex flex-wrap items-center gap-3">
