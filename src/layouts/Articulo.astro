@@ -1,0 +1,202 @@
+---
+import Layout from './Layout.astro';
+import Footer from '../components/Footer.astro';
+import { TECH_ICONS } from '../consts';
+
+interface Props {
+  title: string;
+  descripcion: string; // para el <title> y la meta de búsqueda
+  domain?: string;
+  etiqueta?: string; // estado: «En construcción», «Open source», etc.
+  resumen: string;
+  ficha?: Record<string, string>;
+  stack?: string[];
+  cta?: { label: string; url: string };
+  nota?: string;
+}
+
+const { title, descripcion, domain, etiqueta, resumen, ficha, stack, cta, nota } =
+  Astro.props;
+---
+
+<Layout title={`${title} | Franco Cañete Herrera`} description={descripcion}>
+  <main class="mx-auto max-w-3xl px-6 pb-20 pt-16">
+    <a
+      href="/#proyectos"
+      class="mb-10 inline-flex items-center gap-2 text-sm text-gray-400 transition-colors hover:text-cyan-400"
+    >
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"></path>
+      </svg>
+      Volver al portafolio
+    </a>
+
+    {domain && <p class="mb-2 font-mono text-xs text-cyan-400">{domain}</p>}
+
+    {
+      etiqueta && (
+        <p class="mb-3 inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-gray-300">
+          <span class="latido h-1.5 w-1.5 rounded-full bg-cyan-400" aria-hidden="true" />
+          {etiqueta}
+        </p>
+      )
+    }
+
+    <h1 class="font-display mb-5 text-4xl font-bold leading-[1.08] tracking-tight text-white sm:text-5xl">
+      {title}
+    </h1>
+
+    <p class="mb-8 text-lg leading-relaxed text-gray-300">{resumen}</p>
+
+    <slot name="portada" />
+
+    {
+      ficha && (
+        <dl class="card mb-8 grid gap-5 p-6 sm:grid-cols-3">
+          {Object.entries(ficha).map(([clave, valor]) => (
+            <div>
+              <dt class="mb-1 text-xs font-semibold uppercase tracking-wide text-cyan-400">
+                {clave}
+              </dt>
+              <dd class="text-sm leading-snug text-gray-300">{valor}</dd>
+            </div>
+          ))}
+        </dl>
+      )
+    }
+
+    {
+      stack && (
+        <div class="mb-10 flex flex-wrap gap-2">
+          {stack.map((t) => {
+            const tech = TECH_ICONS[t];
+            return (
+              <span class="tech-tag">
+                {tech && (
+                  <img
+                    src={tech.icon}
+                    alt=""
+                    aria-hidden="true"
+                    width="16"
+                    height="16"
+                    loading="lazy"
+                    class:list={['h-4 w-4 object-contain', tech.invert && 'icon-invert']}
+                  />
+                )}
+                {t}
+              </span>
+            );
+          })}
+        </div>
+      )
+    }
+
+    <article class="articulo">
+      <slot />
+    </article>
+
+    <div class="mt-12 flex flex-wrap items-center gap-4 border-t border-white/10 pt-8">
+      {
+        cta && (
+          <a href={cta.url} target="_blank" rel="noopener noreferrer" class="btn-primary">
+            {cta.label}
+          </a>
+        )
+      }
+      <a href="/#proyectos" class="btn-outline">Ver otros proyectos</a>
+    </div>
+
+    {nota && <p class="mt-4 text-xs italic text-gray-500">{nota}</p>}
+  </main>
+
+  <Footer />
+</Layout>
+
+<style is:global>
+  /* Prosa de los artículos de proyecto. Global porque el contenido llega
+     por slot desde cada página y los estilos scopeados no lo alcanzarían.
+     Usa los mismos colores y escalas del sitio: ninguna librería nueva. */
+  .articulo h2 {
+    margin: 2.5rem 0 0.85rem;
+    font-size: 1.375rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #fff;
+    text-wrap: balance;
+  }
+
+  .articulo h2:first-child {
+    margin-top: 0;
+  }
+
+  .articulo p {
+    margin: 0 0 1.1rem;
+    line-height: 1.75;
+    color: rgb(156 163 175);
+  }
+
+  .articulo ul {
+    margin: 0 0 1.1rem;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .articulo li {
+    position: relative;
+    padding-left: 1.15rem;
+    line-height: 1.7;
+    color: rgb(156 163 175);
+  }
+
+  /* Viñeta propia: la del navegador no se puede teñir con el acento */
+  .articulo li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.7em;
+    width: 5px;
+    height: 5px;
+    border-radius: 9999px;
+    background: rgb(34 211 238);
+  }
+
+  .articulo strong {
+    color: rgb(229 231 235);
+    font-weight: 600;
+  }
+
+  .articulo code {
+    padding: 0.1rem 0.35rem;
+    border-radius: 0.25rem;
+    background: rgb(255 255 255 / 0.07);
+    color: rgb(103 232 249);
+    font-size: 0.875em;
+  }
+</style>
+
+<style>
+  .latido {
+    animation: latido-punto 2s ease-in-out infinite;
+  }
+
+  @keyframes latido-punto {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.35;
+      transform: scale(0.75);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .latido {
+      animation: none;
+    }
+  }
+</style>
