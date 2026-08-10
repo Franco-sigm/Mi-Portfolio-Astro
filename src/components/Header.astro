@@ -1,5 +1,7 @@
 ---
-import { CONTACT } from '../consts';
+import { Image } from 'astro:assets';
+import { CONTACT, PROFILE } from '../consts';
+import logo from '../assets/surcode-logo.png';
 
 const links = [
   { href: '#inicio', label: 'Inicio' },
@@ -15,11 +17,24 @@ const links = [
   class="fixed top-0 z-50 w-full border-b border-white/5 bg-[#04101f]/70 backdrop-blur-md"
 >
   <nav class="mx-auto flex max-w-5xl items-center justify-between px-6 py-3">
-    <a href="#inicio" class="text-lg font-bold text-white">
-      Franco<span class="text-acento">.dev</span>
+    <a
+      href="#inicio"
+      class="flex shrink-0 items-center gap-2.5 font-bold text-white transition-opacity hover:opacity-80"
+    >
+      <Image
+        src={logo}
+        alt="Surcode"
+        width={56}
+        height={56}
+        loading="eager"
+        class="h-7 w-7 shrink-0 rounded-full"
+      />
+      <span class="whitespace-nowrap text-base lg:text-lg">{PROFILE.name}</span>
     </a>
 
-    <div class="hidden items-center gap-7 md:flex">
+    {/* gap menor en md: con el nombre completo, cinco enlaces y el botón
+        de CV, el espacio justo en esa anchura se agota */}
+    <div class="hidden items-center gap-5 md:flex lg:gap-7">
       {
         links.map((l) => (
           <a
