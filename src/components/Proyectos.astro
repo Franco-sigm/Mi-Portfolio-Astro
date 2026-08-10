@@ -72,16 +72,20 @@ const images = { portafolio, condominio, surcode };
               <div class="flex flex-wrap items-center gap-3">
                 {p.links
                   .filter((l) => l.url)
-                  .map((l) => (
-                    <a
-                      href={l.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class={l.primary ? 'btn-primary' : 'btn-outline'}
-                    >
-                      {l.label}
-                    </a>
-                  ))}
+                  .map((l) => {
+                    // Una página del propio sitio no debe abrirse en pestaña nueva
+                    const interno = l.url.startsWith('/');
+                    return (
+                      <a
+                        href={l.url}
+                        target={interno ? undefined : '_blank'}
+                        rel={interno ? undefined : 'noopener noreferrer'}
+                        class={l.primary ? 'btn-primary' : 'btn-outline'}
+                      >
+                        {l.label}
+                      </a>
+                    );
+                  })}
               </div>
 
               {p.note && <p class="mt-4 text-xs italic text-gray-500">{p.note}</p>}

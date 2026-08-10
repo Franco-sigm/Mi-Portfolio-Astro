@@ -1,0 +1,294 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../../layouts/Layout.astro';
+import Footer from '../../components/Footer.astro';
+import { TECH_ICONS } from '../../consts';
+import portada from '../../assets/condominio.png';
+
+// Metadatos de la ficha, tal como vienen de la documentación del proyecto
+const FICHA = {
+  tipo: 'SaaS multi-tenant · proyecto personal de punta a punta',
+  rol: 'Producto, backend, frontend, app móvil e infraestructura (desarrollo individual)',
+  estado: 'Funcional, con demo pública en vivo',
+};
+
+const STACK = [
+  'Python',
+  'FastAPI',
+  'PostgreSQL',
+  'SQLAlchemy',
+  'Alembic',
+  'React',
+  'Vite',
+  'Tailwind CSS',
+  'Capacitor',
+  'Docker',
+  'Claude API',
+];
+
+const FUNCIONES = [
+  {
+    titulo: 'Gestión financiera',
+    texto:
+      'Ingresos y egresos, cargos por propiedad, generación automática de boletas, cierres contables mensuales reversibles e informes exportables a PDF y Excel.',
+  },
+  {
+    titulo: 'Conciliación de pagos',
+    texto:
+      'El residente sube su comprobante desde el celular; el administrador revisa y aprueba.',
+  },
+  {
+    titulo: 'IA aplicada con criterio',
+    texto:
+      'Extracción automática de campos desde imágenes y PDFs de comprobantes para pre-llenar formularios, y redacción asistida de comunicados. La IA sugiere, la persona confirma: nunca escribe datos financieros sin revisión humana.',
+  },
+  {
+    titulo: 'Portal y app de residentes',
+    texto:
+      'Estado de cuenta, comunicados, encomiendas y certificados, con notificaciones push y corte automático de acceso al dar de baja a un residente.',
+  },
+  {
+    titulo: 'Conserjería',
+    texto: 'Control de encomiendas y operación de turno.',
+  },
+];
+---
+
+<Layout
+  title="ConAdmin — Plataforma de administración de condominios | Franco Cañete Herrera"
+  description="Cómo construí ConAdmin: un SaaS multi-tenant para administrar condominios, con aislamiento de datos por Row-Level Security de PostgreSQL, backend en capas y app móvil."
+>
+  <main class="mx-auto max-w-3xl px-6 pb-20 pt-16">
+    <a
+      href="/#proyectos"
+      class="mb-10 inline-flex items-center gap-2 text-sm text-gray-400 transition-colors hover:text-cyan-400"
+    >
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"></path>
+      </svg>
+      Volver al portafolio
+    </a>
+
+    <p class="mb-2 font-mono text-xs text-cyan-400">conadmin.cl</p>
+    <h1 class="font-display mb-5 text-4xl font-bold leading-[1.08] tracking-tight text-white sm:text-5xl">
+      ConAdmin
+    </h1>
+
+    <p class="mb-8 text-lg leading-relaxed text-gray-300">
+      Plataforma SaaS para administrar condominios: gastos comunes, conciliación de pagos,
+      cierres contables, comunicados, encomiendas y portal de residentes. Arquitectura
+      multi-tenant donde el aislamiento de datos entre clientes lo impone PostgreSQL con
+      Row-Level Security, no el código de la aplicación. Incluye portal web para
+      administradores, app Android para residentes y funciones asistidas por IA.
+      Desarrollado completo por una sola persona.
+    </p>
+
+    <Image
+      src={portada}
+      alt="Panel financiero de ConAdmin mostrando balance, ingresos, egresos y unidades"
+      class="mb-10 w-full rounded-xl border border-white/10 object-cover shadow-2xl"
+    />
+
+    <!-- Ficha del proyecto -->
+    <dl class="card mb-8 grid gap-5 p-6 sm:grid-cols-3">
+      {
+        Object.entries(FICHA).map(([clave, valor]) => (
+          <div>
+            <dt class="mb-1 text-xs font-semibold uppercase tracking-wide text-cyan-400">
+              {clave}
+            </dt>
+            <dd class="text-sm leading-snug text-gray-300">{valor}</dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    <div class="mb-10 flex flex-wrap gap-2">
+      {
+        STACK.map((t) => {
+          const tech = TECH_ICONS[t];
+          return (
+            <span class="tech-tag">
+              {tech && (
+                <img
+                  src={tech.icon}
+                  alt=""
+                  aria-hidden="true"
+                  width="16"
+                  height="16"
+                  loading="lazy"
+                  class:list={['h-4 w-4 object-contain', tech.invert && 'icon-invert']}
+                />
+              )}
+              {t}
+            </span>
+          );
+        })
+      }
+    </div>
+
+    <!-- Artículo -->
+    <article class="articulo">
+      <h2>El problema</h2>
+      <p>
+        En Chile, la administración de condominios sigue funcionando con planillas Excel,
+        grupos de WhatsApp y trámites en papel. El cobro de gastos comunes, la conciliación
+        de comprobantes de pago, los comunicados, el control de encomiendas, los certificados
+        de residencia y el cierre contable mensual viven en herramientas desconectadas entre
+        sí. El resultado es trabajo manual repetido, errores de cuadratura y cero
+        trazabilidad frente a un reclamo.
+      </p>
+      <p>
+        ConAdmin centraliza toda esa operación en una sola plataforma, con un portal para el
+        administrador, una app móvil para los residentes y cumplimiento de la normativa
+        chilena de protección de datos.
+      </p>
+
+      <h2>La decisión técnica central: aislamiento en la base de datos</h2>
+      <p>
+        ConAdmin es multi-tenant: muchas comunidades comparten una misma base de datos. El
+        riesgo evidente de ese modelo es que una consulta mal escrita filtre datos de un
+        cliente a otro.
+      </p>
+      <p>
+        En vez de confiar ese aislamiento a la lógica de aplicación —donde basta un
+        <code>WHERE</code> olvidado para causar una brecha—, ConAdmin lo delega al motor de
+        base de datos con <strong>Row-Level Security de PostgreSQL</strong>. La aplicación
+        corre con un rol de Postgres sin privilegios y cada consulta queda acotada al tenant
+        activo por política del propio motor. Aunque un endpoint tuviera un bug, la base de
+        datos no devuelve filas de otro cliente.
+      </p>
+      <p>
+        Esa decisión convierte un problema disperso por todo el código en un único punto de
+        control: autenticación y fijación del contexto de tenant. Es también la restricción
+        que ordena el resto de la arquitectura.
+      </p>
+
+      <h2>Arquitectura</h2>
+      <p>
+        El backend es un <strong>monolito modular en capas</strong> con separación estricta:
+        <code>routes/</code> (endpoints y HTTP), <code>schemas/</code> (contratos validados
+        con Pydantic), <code>services/</code> (reglas de negocio, agnósticas al transporte) y
+        <code>models.py</code> (ORM). Cada capa conoce solo a la inmediatamente inferior.
+      </p>
+      <p>
+        El beneficio concreto: los mismos servicios de dominio alimentan el portal web, la app
+        móvil y un worker en segundo plano que genera boletas, sin duplicar reglas de negocio.
+        Y como los servicios no dependen de HTTP, la lógica crítica —cálculo financiero,
+        cierres mensuales, auditoría, corte de acceso al portal— se prueba directamente con
+        <code>pytest</code>.
+      </p>
+      <p>
+        Sobre esa base: ~90 endpoints REST, 18 entidades de dominio, migraciones versionadas
+        con Alembic y backend contenedorizado con Docker.
+      </p>
+
+      <h2>Funcionalidad destacada</h2>
+      <ul>
+        {
+          FUNCIONES.map((f) => (
+            <li>
+              <strong>{f.titulo}</strong> — {f.texto}
+            </li>
+          ))
+        }
+      </ul>
+
+      <h2>Cumplimiento normativo (Ley 21.719)</h2>
+      <p>
+        El sistema maneja datos personales de residentes, así que el cumplimiento no fue un
+        anexo sino parte del diseño. Se implementaron y documentaron por fases: minimización y
+        almacenamiento seguro, gestión de consentimiento, ejercicio de derechos del titular
+        (acceso, rectificación, supresión), auditoría de accesos y operaciones con informe
+        exportable, políticas de retención y eliminación, y una evaluación de impacto (DPIA).
+      </p>
+
+      <h2>Qué demuestra este proyecto</h2>
+      <p>
+        Producto pensado desde un problema real de mercado y llevado hasta una plataforma
+        funcional en producción: diseño de arquitectura multi-tenant segura, backend en capas
+        y testeado, tres clientes distintos sobre una misma API (web, móvil y worker),
+        integración de IA con un criterio de riesgo definido y cumplimiento normativo
+        documentado. Todo el ciclo —producto, desarrollo, despliegue— ejecutado de forma
+        individual.
+      </p>
+    </article>
+
+    <div class="mt-12 flex flex-wrap items-center gap-4 border-t border-white/10 pt-8">
+      <a href="https://conadmin.cl" target="_blank" rel="noopener noreferrer" class="btn-primary">
+        Probar demo gratis
+      </a>
+      <a href="/#proyectos" class="btn-outline">Ver otros proyectos</a>
+    </div>
+
+    <p class="mt-4 text-xs italic text-gray-500">
+      Repositorio privado: código propietario.
+    </p>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  /* Prosa del artículo. Usa los mismos colores y escalas del sitio;
+     no se introduce ninguna librería ni sistema de estilos nuevo. */
+  .articulo h2 {
+    margin: 2.5rem 0 0.85rem;
+    font-size: 1.375rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #fff;
+    text-wrap: balance;
+  }
+
+  .articulo h2:first-child {
+    margin-top: 0;
+  }
+
+  .articulo p {
+    margin: 0 0 1.1rem;
+    line-height: 1.75;
+    color: rgb(156 163 175);
+  }
+
+  .articulo ul {
+    margin: 0 0 1.1rem;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .articulo li {
+    position: relative;
+    padding-left: 1.15rem;
+    line-height: 1.7;
+    color: rgb(156 163 175);
+  }
+
+  /* Viñeta propia: la del navegador no se puede teñir con el acento */
+  .articulo li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.7em;
+    width: 5px;
+    height: 5px;
+    border-radius: 9999px;
+    background: rgb(34 211 238);
+  }
+
+  .articulo strong {
+    color: rgb(229 231 235);
+    font-weight: 600;
+  }
+
+  .articulo code {
+    padding: 0.1rem 0.35rem;
+    border-radius: 0.25rem;
+    background: rgb(255 255 255 / 0.07);
+    color: rgb(103 232 249);
+    font-size: 0.875em;
+  }
+</style>
