@@ -137,6 +137,7 @@ export const GITHUB = {
 // -------------------------------------------------------------
 export const TECH_ICONS: Record<string, { icon: string; invert?: boolean }> = {
   Astro: { icon: '/icons/astro.svg' },
+  Capacitor: { icon: '/icons/capacitor.svg' },
   'CSS3': { icon: '/icons/css3.svg' },
   Docker: { icon: '/icons/docker.svg' },
   FastAPI: { icon: '/icons/fastapi.svg' },
@@ -164,37 +165,39 @@ export const TECH_ICONS: Record<string, { icon: string; invert?: boolean }> = {
 // -------------------------------------------------------------
 export type Project = {
   title: string;
-  domain: string;
+  domain?: string; // aún sin dominio mientras el proyecto no esté publicado
   role: string;
   description: string;
   image: 'condominio' | 'surcode' | 'portafolio' | null;
   tags: string[];
   links: { label: string; url: string; primary?: boolean }[];
   note?: string; // aclaración bajo los botones (ej: repo privado)
+  enConstruccion?: boolean; // muestra la etiqueta de estado en la tarjeta
 };
 
 export const PROJECTS: Project[] = [
   {
     title: 'ConAdmin',
     domain: 'conadmin.cl',
-    role: 'Diseño, desarrollo full-stack y despliegue',
+    role: 'Producto, backend, frontend, app móvil e infraestructura (desarrollo individual)',
     description:
-      'Lo construí para la administración de la Comunidad Parque Suizo 900: centraliza el control de pagos, el registro de ingresos y gastos, y la comunicación con los residentes. Al ver que el mismo problema se repetía en otros condominios, lo estoy convirtiendo en un producto SaaS.',
+      'Plataforma SaaS para administrar condominios: gastos comunes, conciliación de pagos, cierres contables, comunicados, encomiendas y portal de residentes. Arquitectura multi-tenant donde el aislamiento de datos entre clientes lo impone PostgreSQL con Row-Level Security, no el código de la aplicación. Nació para la Comunidad Parque Suizo 900 y hoy incluye portal web, app Android y funciones asistidas por IA.',
     image: 'condominio',
     tags: [
-      'Vite',
-      'JavaScript',
-      'Tailwind',
-      'Node.js',
       'Python',
       'FastAPI',
-      'SQLAlchemy',
-      'Pydantic',
       'PostgreSQL',
+      'SQLAlchemy',
+      'React',
+      'Vite',
+      'Docker',
+      'Claude API',
     ],
     links: [
       // 👈 cambia esta URL por el enlace directo a la demo gratuita
       { label: 'Probar demo gratis', url: 'https://conadmin.cl', primary: true },
+      // Las URLs que empiezan por / son internas: se abren en la misma pestaña
+      { label: 'Artículo', url: '/proyectos/conadmin' },
     ],
     note: 'Repositorio privado. Actualmente en etapa de prospección de clientes.',
   },
@@ -224,6 +227,30 @@ export const PROJECTS: Project[] = [
       },
       { label: 'Ver sitio', url: 'https://portfolio-personal.surcode.cl' },
     ],
+  },
+  {
+    // 👈 ponle el nombre definitivo cuando lo tengas
+    title: 'Monitoreo de ríos y alertas tempranas',
+    role: 'Producto y desarrollo full-stack',
+    description:
+      'Sistema de monitoreo del caudal de ríos que avisa a los vecinos de sectores rurales cuando el nivel se acerca a un umbral de riesgo. La zona rural es justo donde la alerta llega tarde: el objetivo es que el aviso salga solo, sin que nadie tenga que estar mirando.',
+    image: null,
+    // 👈 confirma o corrige el stack cuando lo definas
+    tags: ['Python', 'FastAPI', 'PostgreSQL'],
+    links: [],
+    enConstruccion: true,
+  },
+  {
+    // 👈 ponle el nombre definitivo cuando lo tengas
+    title: 'Detección de riesgos con visión artificial',
+    role: 'Producto y desarrollo full-stack',
+    description:
+      'Sistema que analiza el video de las cámaras de una empresa de logística y detecta acciones inseguras en bodega para avisar en el momento, no al revisar la grabación después del accidente.',
+    image: null,
+    // 👈 confirma o corrige el stack cuando lo definas
+    tags: ['Python', 'Visión por computador', 'FastAPI'],
+    links: [],
+    enConstruccion: true,
   },
 ];
 
