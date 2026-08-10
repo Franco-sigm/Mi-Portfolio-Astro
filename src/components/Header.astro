@@ -1,5 +1,5 @@
 ---
-import { PROFILE } from '../consts';
+import { CONTACT } from '../consts';
 
 const links = [
   { href: '#inicio', label: 'Inicio' },
@@ -16,7 +16,7 @@ const links = [
 >
   <nav class="mx-auto flex max-w-5xl items-center justify-between px-6 py-3">
     <a href="#inicio" class="text-lg font-bold text-white">
-      Franco<span class="text-yellow">.dev</span>
+      Franco<span class="text-acento">.dev</span>
     </a>
 
     <div class="hidden items-center gap-7 md:flex">
@@ -30,7 +30,7 @@ const links = [
           </a>
         ))
       }
-      <a href={PROFILE.cvPath} download class="button-yellow text-sm">
+      <a href={CONTACT.cvPath} download class="button-acento text-sm">
         Descargar CV
       </a>
     </div>
@@ -57,7 +57,7 @@ const links = [
         </a>
       ))
     }
-    <a href={PROFILE.cvPath} download class="button-yellow mt-3 inline-block text-sm">
+    <a href={CONTACT.cvPath} download class="button-acento mt-3 inline-block text-sm">
       Descargar CV
     </a>
   </div>

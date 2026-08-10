@@ -3,6 +3,25 @@
 @tailwind components;
 @tailwind utilities;
 
+/* -------------------------------------------------------------
+   Space Grotesk para el título del hero. Se sirve desde
+   /public/fonts, no desde Google Fonts: una sola descarga, sin
+   peticiones a servidores externos.
+   `swap` muestra el texto con la fuente del sistema mientras carga,
+   en vez de dejar un hueco en blanco.
+   ------------------------------------------------------------- */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/space-grotesk-700.woff2') format('woff2');
+}
+
+.font-display {
+  font-family: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+}
+
 
 /* -------------------------------------------------------------
    Fondo del sitio: azul marino profundo con resplandor radial,
@@ -78,9 +97,12 @@ body::before {
   @apply text-3xl font-bold mb-6 text-white;
 
 }
-.text-yellow {
-  @apply text-[oklch(82.8%_0.189_84.429)];
+/* Acento del sitio. Es un cian más claro que el de .btn-primary, para
+   que el botón de CV siga destacando sobre el resto sin salirse de la
+   gama azul. Texto en el azul del fondo, no negro puro. */
+.text-acento {
+  @apply text-cyan-400;
 }
-.button-yellow {
-  @apply bg-[oklch(82.8%_0.189_84.429)] text-black px-4 py-2 rounded font-semibold hover:brightness-90 transition duration-300;
+.button-acento {
+  @apply bg-cyan-400 text-[#04101f] px-4 py-2 rounded font-semibold hover:bg-cyan-300 transition duration-300;
 }

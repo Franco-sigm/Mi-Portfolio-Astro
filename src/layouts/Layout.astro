@@ -23,6 +23,16 @@ const ogImage = new URL('/og-image.png', SITE.url).href;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- El título del hero es lo primero que se ve: se precarga la fuente
+         para que no aparezca antes con la del sistema y salte al cambiar. -->
+    <link
+      rel="preload"
+      href="/fonts/space-grotesk-700.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <meta name="generator" content={Astro.generator} />
 
     <!-- SEO básico -->

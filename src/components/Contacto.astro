@@ -1,5 +1,5 @@
 ---
-import { METRICS, PROFILE } from '../consts';
+import { CONTACT, METRICS } from '../consts';
 
 // El formulario usa la misma API que las métricas. Sin ella configurada
 // caemos al enlace mailto de siempre, que siempre funciona.
@@ -15,7 +15,11 @@ const apiUrl = METRICS.apiUrl;
 
   {
     apiUrl && (
-      <form class="contacto-form mx-auto mb-10 max-w-xl text-left" data-api={apiUrl} novalidate>
+      <form
+        class="contacto-form mx-auto mb-10 max-w-xl rounded-xl border border-white/10 bg-white/[0.04] p-6 text-left shadow-xl backdrop-blur-sm sm:p-8"
+        data-api={apiUrl}
+        novalidate
+      >
         <div class="grid gap-4 sm:grid-cols-2">
           <div>
             <label class="mb-1 block text-sm text-gray-300" for="nombre">Nombre</label>
@@ -47,29 +51,39 @@ const apiUrl = METRICS.apiUrl;
     )
   }
 
-  <div class="flex flex-wrap justify-center gap-4">
-    <a href={`mailto:${PROFILE.email}`} class={apiUrl ? 'btn-outline' : 'btn-primary'}>
-      ✉️ Escríbeme un correo
-    </a>
-    <a href={PROFILE.linkedin} target="_blank" rel="noopener noreferrer" class="btn-outline">
-      Conectar en LinkedIn
-    </a>
-  </div>
+  {
+    /* Sin API configurada no hay formulario, así que el correo directo
+       pasa a ser la única vía: ahí sí hace falta el botón. */
+    !apiUrl && (
+      <div class="flex justify-center">
+        <a href={`mailto:${CONTACT.email}`} class="btn-primary">
+          ✉️ Escríbeme un correo
+        </a>
+      </div>
+    )
+  }
 
-  <p class="mt-6 text-center text-sm text-gray-500">{PROFILE.email}</p>
+  <p class="mt-6 text-center text-sm text-gray-500">{CONTACT.email}</p>
 </section>
 
 <style>
+  /* Los campos van más oscuros que el panel que los contiene: así se
+     ven hundidos en la caja en vez de fundirse con ella. */
   .contacto-form input,
   .contacto-form textarea {
     width: 100%;
     border-radius: 0.5rem;
-    border: 1px solid rgb(255 255 255 / 0.1);
-    background: rgb(255 255 255 / 0.05);
+    border: 1px solid rgb(255 255 255 / 0.12);
+    background: rgb(0 0 0 / 0.28);
     padding: 0.6rem 0.8rem;
     color: #fff;
     font-size: 0.925rem;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  }
+
+  .contacto-form input::placeholder,
+  .contacto-form textarea::placeholder {
+    color: rgb(148 163 184 / 0.7);
   }
 
   .contacto-form textarea {
@@ -85,7 +99,7 @@ const apiUrl = METRICS.apiUrl;
   .contacto-form input:-webkit-autofill:hover,
   .contacto-form input:-webkit-autofill:focus {
     -webkit-text-fill-color: #fff;
-    -webkit-box-shadow: 0 0 0 1000px rgb(19 32 50) inset;
+    -webkit-box-shadow: 0 0 0 1000px rgb(10 19 30) inset;
     caret-color: #fff;
     transition: background-color 9999s ease-in-out 0s;
   }
