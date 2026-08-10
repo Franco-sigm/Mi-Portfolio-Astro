@@ -16,13 +16,13 @@ export const PROFILE = {
   name: 'Franco Cañete Herrera',
   role: 'Desarrollador Web Full-Stack',
   // Frase de gancho: lo primero que lee un reclutador
-  tagline: 
-     `Hola, soy Franco Cañete, desarollador full stack enfocado en backend con Python y el ecosistema de FasApi. Me enfoco en desarrollar arquitecturas
-     escalables y seguras.
-     
-     En frontend me gusta trabajar con Astro y React, y en diseño de interfaces con Tailwind CSS.
-     estoy siempre aprendiendo a traves del desarrollo de Poyectos fullstack para mejorar constantemente mis habilidades.
-     `,
+  tagline: `Hola, soy Franco Cañete. Siempre me ha interesado descifrar la arquitectura de la realidad: entender cómo está hecho lo que me rodea y por qué funciona así. En un punto de mi vida me crucé con el mundo del código, y esa curiosidad encontró su lugar porque programar no es solo entender cómo se construye algo, es poder construirlo.
+
+Hoy trabajo en tres frentes: productos propios, para mantener activo el músculo de la creatividad; software a medida para clientes; y proyectos sin fines de lucro que aporten valor a la comunidad.
+
+En backend trabajo con Python y el ecosistema de FastAPI, con foco en arquitecturas escalables y seguras. En frontend, con Astro y React, y en el diseño de interfaces con Tailwind CSS.
+
+Busco sumarme a un equipo donde pueda seguir construyendo software que resuelva problemas reales, y aprender de gente con más camino recorrido que yo.`,
 }
 
 export const CONTACT = {
@@ -88,7 +88,7 @@ export const STACK: {
       { name: 'Astro', icon: '/icons/astro.svg' },
       { name: 'Tailwind CSS', icon: '/icons/tailwindcss.svg' },
       { name: 'Vite', icon: '/icons/vitejs.svg' },
-      { name: 'TypeScript', icon: '/icons/typescript.svg' },
+      { name: 'JavaScript', icon: '/icons/javascript.svg' },
     ],
   },
   {
@@ -109,6 +109,7 @@ export const STACK: {
       { name: 'Git', icon: '/icons/git.svg' },
       { name: 'GitHub', icon: '/icons/github.svg', invert: true },
       { name: 'Docker', icon: '/icons/docker.svg' },
+      { name: 'VS Code', icon: '/icons/vscode.svg' },
       { name: 'Vercel', icon: '/icons/vercel.svg', invert: true },
     ],
   },

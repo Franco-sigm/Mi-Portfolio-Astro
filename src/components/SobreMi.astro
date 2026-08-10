@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import { CONTACT, PROFILE } from '../consts';
+import { CONTACT, PROFILE, STACK } from '../consts';
 import moto from '../assets/moto.jpg';
 ---
 
@@ -8,7 +8,10 @@ import moto from '../assets/moto.jpg';
   id="inicio"
   class="container mx-auto flex min-h-screen items-center px-6 pt-24 pb-12 md:px-8"
 >
-  <div class="grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:gap-16">
+  {/* items-start en escritorio: las dos columnas arrancan arriba, así la
+      foto no queda flotando en el centro y todo lo que sobra abajo queda
+      para el stack. En móvil se apilan, ahí centrar sí tiene sentido. */}
+  <div class="grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:items-start md:gap-16">
     <div class="order-2 text-center md:order-1 md:text-left">
       <p class="mb-3 font-medium text-cyan-400">👋 Hola, soy</p>
       <h1
@@ -62,13 +65,55 @@ import moto from '../assets/moto.jpg';
       </div>
     </div>
 
-    <div class="order-1 flex items-center justify-center md:order-2">
-      <div class="h-72 w-72 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 p-1.5 md:h-80 md:w-80">
+    <div class="order-1 flex flex-col items-center gap-7 md:order-2">
+      <div class="h-60 w-60 shrink-0 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 p-1.5 sm:h-64 sm:w-64 md:h-72 md:w-72">
         <Image
           src={moto}
           alt={`Foto de perfil de ${PROFILE.name}`}
           class="h-full w-full rounded-full object-cover"
         />
+      </div>
+
+      {/* El stack acompaña a la foto: equilibra la altura de la columna
+          de texto y pone las herramientas junto a la persona. */}
+      <div class="w-full">
+        <h3 class="mb-5 text-center text-lg font-bold text-white">Mi stack</h3>
+
+        <div class="space-y-6">
+          {
+            STACK.map((grupo) => (
+              <div>
+                <p class="mb-3 text-center text-[0.7rem] font-semibold uppercase tracking-wider text-cyan-400">
+                  {grupo.category}
+                </p>
+                {/* Celdas de ancho fijo: todas ocupan lo mismo, así los
+                    logos quedan alineados en columnas aunque los nombres
+                    tengan largos distintos. */}
+                <div class="flex flex-wrap justify-center gap-x-3 gap-y-4">
+                  {grupo.items.map((item) => (
+                    <div class="flex w-[5.25rem] flex-col items-center gap-2">
+                      <img
+                        src={item.icon}
+                        alt=""
+                        aria-hidden="true"
+                        width="88"
+                        height="88"
+                        loading="lazy"
+                        class:list={[
+                          'h-11 w-11 shrink-0 object-contain transition-transform duration-200 hover:scale-110',
+                          item.invert && 'icon-invert',
+                        ]}
+                      />
+                      <span class="text-center text-[0.72rem] leading-tight text-gray-400">
+                        {item.name}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))
+          }
+        </div>
       </div>
     </div>
   </div>
