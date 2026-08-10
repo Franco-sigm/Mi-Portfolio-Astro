@@ -237,7 +237,7 @@ export const PROJECTS: Project[] = [
     image: null,
     // 👈 confirma o corrige el stack cuando lo definas
     tags: ['Python', 'FastAPI', 'PostgreSQL'],
-    links: [],
+    links: [{ label: 'Artículo', url: '/proyectos/monitoreo-rios' }],
     enConstruccion: true,
   },
   {
@@ -249,7 +249,7 @@ export const PROJECTS: Project[] = [
     image: null,
     // 👈 confirma o corrige el stack cuando lo definas
     tags: ['Python', 'Visión por computador', 'FastAPI'],
-    links: [],
+    links: [{ label: 'Artículo', url: '/proyectos/deteccion-riesgos' }],
     enConstruccion: true,
   },
 ];

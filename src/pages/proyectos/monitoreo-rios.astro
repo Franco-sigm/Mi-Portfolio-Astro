@@ -1,0 +1,75 @@
+---
+import Articulo from '../../layouts/Articulo.astro';
+---
+
+<Articulo
+  title="Monitoreo de ríos y alertas tempranas"
+  descripcion="Proyecto open source para monitorear el caudal de ríos y avisar automáticamente a los vecinos de sectores rurales cuando el nivel se acerca a un umbral de riesgo."
+  etiqueta="En construcción · Open source"
+  resumen="Un sistema que vigila el nivel de un río y avisa solo, sin que nadie tenga que estar mirando. Pensado para localidades rurales, que es donde la crecida sorprende y donde no hay presupuesto para comprar una solución. Por eso el código será abierto y sin fines de lucro."
+  ficha={{
+    Tipo: 'Proyecto open source · sin fines de lucro',
+    Rol: 'Producto y desarrollo full-stack',
+    Estado: 'En construcción',
+  }}
+  stack={['Python', 'FastAPI', 'PostgreSQL']}
+  nota="Proyecto en desarrollo. El repositorio será público cuando haya una primera versión funcional."
+>
+  <h2>El problema</h2>
+  <p>
+    En Chile hay estaciones que miden el caudal de los ríos y publican los datos. El
+    problema no es que la información no exista: es que no llega a tiempo a quien vive
+    junto al cauce. Está en portales que hay que ir a consultar, en formatos pensados
+    para organismos técnicos, y no en el teléfono de la persona que tiene que decidir si
+    mueve los animales o saca el auto.
+  </p>
+  <p>
+    En sectores rurales eso pesa más. Las viviendas están dispersas, no hay un sistema de
+    aviso local, y muchas veces la primera señal de una crecida es el ruido del agua. El
+    margen entre enterarse y tener que reaccionar puede ser de minutos.
+  </p>
+
+  <h2>Qué hará el sistema</h2>
+  <p>
+    La idea es simple y por eso puede funcionar: leer el nivel del río de forma continua,
+    comparar contra un umbral definido para ese punto concreto, y disparar un aviso
+    automático cuando se supera. Sin intermediarios y sin que nadie tenga que estar
+    revisando una pantalla.
+  </p>
+  <ul>
+    <li>
+      <strong>Medición continua</strong> — lectura periódica del nivel del cauce y
+      registro histórico para poder mirar hacia atrás y ajustar los umbrales.
+    </li>
+    <li>
+      <strong>Umbrales por sector</strong> — lo que es normal en un río no lo es en otro;
+      el nivel de alerta se define para cada punto vigilado.
+    </li>
+    <li>
+      <strong>Aviso automático</strong> — la notificación sale sola al superarse el
+      umbral, que es el punto entero del proyecto.
+    </li>
+  </ul>
+
+  <h2>Por qué open source</h2>
+  <p>
+    Porque el destinatario no tiene con qué pagarlo. Una junta de vecinos rural o un
+    municipio pequeño no va a licitar un sistema de alerta temprana, y ese es exactamente
+    el lugar donde más falta hace.
+  </p>
+  <p>
+    Con el código abierto, otra localidad puede instalarlo, adaptarlo a su río y mantenerlo
+    sin depender de mí ni pagar una licencia. Un proyecto de seguridad comunitaria que
+    dependa de que su autor siga interesado es un proyecto frágil; abrirlo es lo que le da
+    posibilidad de sobrevivir.
+  </p>
+  <p>
+    No busca ser rentable. Busca existir y que se pueda copiar.
+  </p>
+
+  <h2>En qué está hoy</h2>
+  <p>
+    En construcción. Todavía no hay demo pública ni repositorio abierto: cuando exista una
+    primera versión que funcione de punta a punta, el código se publica.
+  </p>
+</Articulo>
