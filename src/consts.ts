@@ -14,7 +14,7 @@ export const SITE = {
 
 export const PROFILE = {
   name: 'Franco Cañete Herrera',
-  role: 'Desarrollador Web Full-Stack junior y Técnico en Nivel Superior en Análisis y Programación Computacional',
+  role: 'Desarrollador Web Full-Stack',
   // Frase de gancho: lo primero que lee un reclutador
   tagline: 
      `Hola, soy Franco Cañete, desarollador full stack enfocado en backend con Python y el ecosistema de FasApi. Me enfoco en desarrollar arquitecturas
