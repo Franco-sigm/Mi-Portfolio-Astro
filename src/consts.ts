@@ -6,14 +6,14 @@
 export const SITE = {
   url: 'https://portfolio-personal.surcode.cl',
   // Título de la pestaña del navegador
-  title: 'Franco Cañete Herrera — Desarrollador Web Full-Stack',
+  title: 'Franco Cañete — Desarrollador Web Full-Stack',
   // Descripción para Google y redes sociales (máx. ~160 caracteres)
   description:
     'Desarrollador Web Full-Stack junior y Técnico en Nivel Superior en Análisis y Programación Computacional.',
 };
 
 export const PROFILE = {
-  name: 'Franco Cañete Herrera',
+  name: 'Franco Cañete',
   role: 'Desarrollador Web Full-Stack',
   // Frase de gancho: lo primero que lee un reclutador
   tagline: `Hola, soy Franco Cañete. Siempre me ha interesado descifrar la arquitectura de la realidad: entender cómo está hecho lo que me rodea y por qué funciona así. En un punto de mi vida me crucé con el mundo del código, y esa curiosidad encontró su lugar porque programar no es solo entender cómo se construye algo, es poder construirlo.

@@ -2,6 +2,15 @@
 import { Image } from 'astro:assets';
 import { CONTACT, PROFILE, STACK } from '../consts';
 import moto from '../assets/moto.jpg';
+
+// El nombre se parte en palabras y cada palabra en letras, con un índice
+// corrido para escalonar la aparición. Agrupado por palabra para que el
+// salto de línea nunca corte un nombre por la mitad.
+let n = 0;
+const palabras = PROFILE.name.split(' ').map((palabra, i, todas) => ({
+  letras: [...palabra].map((letra) => ({ letra, i: n++ })),
+  espacio: i < todas.length - 1 ? n++ : null,
+}));
 ---
 
 <section
@@ -14,10 +23,27 @@ import moto from '../assets/moto.jpg';
   <div class="grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:items-start md:gap-16">
     <div class="order-2 text-center md:order-1 md:text-left">
       <p class="mb-3 font-medium text-cyan-400">👋 Hola, soy</p>
+      {/* El nombre real va en aria-label: un lector de pantalla leería
+          las letras sueltas de una en una si le dejáramos los spans. */}
       <h1
-        class="font-display mb-3 text-5xl font-bold leading-[1.04] tracking-tight text-white sm:text-6xl md:text-7xl"
+        class="nombre-anim font-display mb-3 flex flex-wrap items-baseline justify-center text-5xl font-bold leading-[1.04] tracking-tight text-white sm:text-6xl md:justify-start md:text-7xl"
+        aria-label={PROFILE.name}
       >
-        {PROFILE.name}
+        {
+          palabras.map((palabra) => (
+            <span class="palabra" aria-hidden="true">
+              {palabra.letras.map(({ letra, i }) => (
+                <span style={`--i:${i}`}>{letra}</span>
+              ))}
+              {
+                palabra.espacio !== null && (
+                  <span class="espacio" style={`--i:${palabra.espacio}`}>&nbsp;</span>
+                )
+              }
+            </span>
+          ))
+        }
+        <span class="cursor" aria-hidden="true">&nbsp;</span>
       </h1>
       {/* El cargo baja a línea de apoyo: si compite en tamaño con el
           nombre, el hero se lee plano y no hay jerarquía. */}
@@ -118,3 +144,80 @@ import moto from '../assets/moto.jpg';
     </div>
   </div>
 </section>
+
+<style>
+  /* Máquina de escribir. El tecleo lo lleva el script: se ocultan las
+     letras con `visibility` y no con `display`, porque así conservan su
+     espacio y el texto no salta ni empuja al resto del hero mientras
+     se escribe. */
+  .palabra {
+    white-space: nowrap; /* el salto de línea no parte nombres */
+  }
+
+  .nombre-anim span span {
+    display: inline-block;
+  }
+
+  /* El h1 es flex para que el salto de línea del HTML entre los <span>
+     de cada palabra no se cuele como un espacio extra: un contenedor
+     flex descarta los nodos de solo espacio en blanco. Así el hueco
+     entre nombre y apellido es exactamente el de .espacio y nada más. */
+  .espacio {
+    width: 0.2em;
+    overflow: hidden;
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 0.06em;
+    background: rgb(34 211 238);
+    animation: parpadeo-cursor 1s steps(1) infinite;
+  }
+
+  @keyframes parpadeo-cursor {
+    0%,
+    49% {
+      opacity: 1;
+    }
+    50%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cursor {
+      animation: none;
+      opacity: 0;
+    }
+  }
+</style>
+
+<script>
+  const nombre = document.querySelector<HTMLElement>('.nombre-anim');
+  const sinMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (nombre && !sinMovimiento) {
+    // Solo las letras: el cursor queda fuera para que no se teclee él mismo.
+    const letras = [...nombre.querySelectorAll<HTMLElement>('span[style*="--i"]')];
+    const RITMO = 90; // ms entre pulsaciones
+    const CICLO = 3000;
+    let pendientes: number[] = [];
+
+    const teclear = () => {
+      pendientes.forEach(clearTimeout);
+      pendientes = [];
+      for (const l of letras) l.style.visibility = 'hidden';
+      letras.forEach((l, i) => {
+        pendientes.push(
+          window.setTimeout(() => {
+            l.style.visibility = 'visible';
+          }, i * RITMO)
+        );
+      });
+    };
+
+    teclear();
+    setInterval(teclear, CICLO);
+  }
+</script>
