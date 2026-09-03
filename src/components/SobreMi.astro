@@ -15,12 +15,12 @@ const palabras = PROFILE.name.split(' ').map((palabra, i, todas) => ({
 
 <section
   id="inicio"
-  class="container mx-auto flex min-h-screen items-center px-6 pt-24 pb-12 md:px-8"
+  class="mx-auto flex min-h-screen max-w-6xl items-center px-6 pt-24 pb-12 md:px-8"
 >
   {/* items-start en escritorio: las dos columnas arrancan arriba, así la
       foto no queda flotando en el centro y todo lo que sobra abajo queda
       para el stack. En móvil se apilan, ahí centrar sí tiene sentido. */}
-  <div class="grid grid-cols-1 items-center gap-12 md:grid-cols-2 md:items-start md:gap-16">
+  <div class="grid w-full grid-cols-1 items-center gap-12 md:grid-cols-2 md:items-start md:gap-16">
     <div class="order-2 text-center md:order-1 md:text-left">
       <p class="mb-3 font-medium text-cyan-400">👋 Hola, soy</p>
       {/* El nombre real va en aria-label: un lector de pantalla leería
