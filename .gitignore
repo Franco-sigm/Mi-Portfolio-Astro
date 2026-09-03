@@ -1,5 +1,6 @@
 # build output
 dist/
+dist.zip
 
 # generated types
 .astro/
@@ -16,6 +17,9 @@ pnpm-debug.log*
 # environment variables
 .env
 .env.production
+# copias y variantes (.env.bak, .env.local…), menos el ejemplo versionado
+.env.*
+!.env.example
 
 
 # macOS-specific files
@@ -30,3 +34,4 @@ __pycache__/
 *.pyc
 # artefactos de Windows/WSL en archivos descargados
 *:Zone.Identifier
+

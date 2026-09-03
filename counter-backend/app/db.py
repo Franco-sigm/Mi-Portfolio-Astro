@@ -1,5 +1,5 @@
 import os
-from urllib.parse import urlparse
+from urllib.parse import unquote, urlparse
 
 import pymysql
 from dotenv import load_dotenv
@@ -19,8 +19,10 @@ def get_db_connection():
 
     return pymysql.connect(
         host=url.hostname,
-        user=url.username,
-        password=url.password,
+        user=unquote(url.username or ''),
+        # La contraseña viaja porcentaje-codificada dentro de la URL: sin
+        # descodificarla, una clave con !, @ o : llegaría mal a MySQL.
+        password=unquote(url.password or ''),
         database=url.path.lstrip('/'),
         port=url.port or 3306,
         cursorclass=pymysql.cursors.DictCursor
