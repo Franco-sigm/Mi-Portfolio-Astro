@@ -1,75 +1,180 @@
 ---
+import { Image } from 'astro:assets';
 import Articulo from '../../layouts/Articulo.astro';
+import portada from '../../assets/rios-vista-general.png';
+import mapa from '../../assets/rios-mapa-estaciones.png';
+import detalle from '../../assets/rios-detalle-estacion.png';
 ---
 
 <Articulo
-  title="Monitoreo de ríos y alertas tempranas"
-  descripcion="Proyecto open source para monitorear el caudal de ríos y avisar automáticamente a los vecinos de sectores rurales cuando el nivel se acerca a un umbral de riesgo."
+  title="Leufü Wechun"
+  descripcion="Sistema open source de monitoreo hidrológico y alertas tempranas para los ríos de La Araucanía, construido sobre los datos públicos de la DGA."
   etiqueta="En construcción · Open source"
-  resumen="Un sistema que vigila el nivel de un río y avisa solo, sin que nadie tenga que estar mirando. Pensado para localidades rurales, que es donde la crecida sorprende y donde no hay presupuesto para comprar una solución. Por eso el código será abierto y sin fines de lucro."
+  resumen="La DGA sólo publica el nivel de las estaciones que ya están en alerta: cuando el dato aparece, el río ya cruzó el umbral. Leufü Wechun recupera el caudal de las 55 estaciones fluviométricas de La Araucanía, detecta las crecidas por cercanía al umbral y por tendencia, y avisa mientras todavía queda margen de reacción."
   ficha={{
     Tipo: 'Proyecto open source · sin fines de lucro',
     Rol: 'Producto y desarrollo full-stack',
-    Estado: 'En construcción',
+    Estado: 'En construcción · código público',
   }}
-  stack={['Python', 'FastAPI', 'PostgreSQL']}
-  nota="Proyecto en desarrollo. El repositorio será público cuando haya una primera versión funcional."
+  stack={[
+    'Python',
+    'FastAPI',
+    'SQLAlchemy',
+    'Alembic',
+    'PostgreSQL',
+    'PostGIS',
+    'React',
+    'Vite',
+    'Leaflet',
+    'Recharts',
+  ]}
+  cta={{ label: 'Ver código en GitHub', url: 'https://github.com/Franco-sigm/leufu-wechun' }}
+  nota="Repositorio público. El nombre viene del mapudungun: leufü es río, wechun es cumbre — el punto al que sube el agua."
 >
-  <h2>El problema</h2>
+  <Image
+    slot="portada"
+    src={portada}
+    alt="Interfaz de Leufü Wechun: panel de alertas, mapa de estaciones y ficha del Río Trancura en alerta"
+    class="mb-10 w-full rounded-xl border border-white/10 object-cover shadow-2xl"
+  />
+
+  <h2>El problema: el dato llega cuando ya es tarde</h2>
   <p>
-    En Chile hay estaciones que miden el caudal de los ríos y publican los datos. El
-    problema no es que la información no exista: es que no llega a tiempo a quien vive
-    junto al cauce. Está en portales que hay que ir a consultar, en formatos pensados
-    para organismos técnicos, y no en el teléfono de la persona que tiene que decidir si
-    mueve los animales o saca el auto.
+    La Dirección General de Aguas publica el estado de sus estaciones en un visor
+    público. Pero tiene una limitación que lo inutiliza para prevenir: <strong>sólo
+    informa el nivel de las estaciones que ya están en alerta</strong>. Las demás
+    aparecen con valor <code>0.0</code> aunque estén transmitiendo con normalidad.
   </p>
   <p>
-    En sectores rurales eso pesa más. Las viviendas están dispersas, no hay un sistema de
-    aviso local, y muchas veces la primera señal de una crecida es el ruido del agua. El
-    margen entre enterarse y tener que reaccionar puede ser de minutos.
+    La magnitud del problema se ve en los números: a nivel nacional, de las 1.837
+    estaciones del visor, sólo 9 traen medición. Son exactamente las mismas 9 que
+    están en alerta. Con esa única fuente no se puede anticipar nada, porque para
+    cuando el dato existe, el río ya cruzó el umbral.
+  </p>
+  <p>
+    Y en sectores rurales ese margen es justamente lo único que hay: viviendas
+    dispersas, sin sistema de aviso local, donde muchas veces la primera señal de
+    una crecida es el ruido del agua.
   </p>
 
-  <h2>Qué hará el sistema</h2>
+  <h2>Recuperar el dato que el visor no entrega</h2>
   <p>
-    La idea es simple y por eso puede funcionar: leer el nivel del río de forma continua,
-    comparar contra un umbral definido para ese punto concreto, y disparar un aviso
-    automático cuando se supera. Sin intermediarios y sin que nadie tenga que estar
-    revisando una pantalla.
+    La solución pasa por entender que el visor hace <strong>dos llamadas
+    distintas</strong>, no una. La primera devuelve el listado completo de estaciones
+    con sus coordenadas y su estado, y es la que trae los ceros. La segunda es la que
+    el visor dispara al pinchar un marcador: un POST de RichFaces que devuelve
+    <code>ultimoCaudalReg</code>, el caudal real en m³/s de cualquier estación, esté
+    o no en alerta.
+  </p>
+  <p>
+    Esa segunda llamada exige mantener la cookie de sesión y el
+    <code>javax.faces.ViewState</code>, y va una petición por estación: unos 170
+    segundos para recorrer las 55 de la región. A cambio, 45 de esas 55 pasan a
+    informar caudal donde antes había un cero.
+  </p>
+
+  <h2>Dos señales, y siempre gana la peor</h2>
+  <Image
+    src={mapa}
+    alt="Mapa de estaciones con marcadores coloreados según su nivel de alerta"
+    class="mb-6 w-full rounded-xl border border-white/10 shadow-xl"
+  />
+  <p>
+    Cada estación se evalúa por dos caminos independientes, y se toma el más grave de
+    los dos. No se promedian: el nivel se mide en metros y el caudal en m³/s, así que
+    mezclarlos daría un número sin significado físico.
   </p>
   <ul>
     <li>
-      <strong>Medición continua</strong> — lectura periódica del nivel del cauce y
-      registro histórico para poder mirar hacia atrás y ajustar los umbrales.
+      <strong>Por umbral</strong> — qué porcentaje del umbral oficial alcanza el
+      nivel medido. Normal bajo el 80 %, atención entre el 80 y el 100 %, alerta al
+      superarlo, crítica desde el 120 %.
     </li>
     <li>
-      <strong>Umbrales por sector</strong> — lo que es normal en un río no lo es en otro;
-      el nivel de alerta se define para cada punto vigilado.
-    </li>
-    <li>
-      <strong>Aviso automático</strong> — la notificación sale sola al superarse el
-      umbral, que es el punto entero del proyecto.
+      <strong>Por tendencia</strong> — cuánto ha crecido el caudal en una ventana de
+      seis horas. Atención al 50 % de crecimiento, alerta al 100 %.
     </li>
   </ul>
+  <p>
+    <strong>La detección por tendencia es lo que hace que la alerta sea temprana</strong>,
+    y tiene un detalle que decide si funciona o no: compara contra la lectura más
+    antigua de la ventana, no contra la anterior. Una crecida que sube un 15 % por
+    hora durante seis horas duplica el caudal sin que ninguna comparación consecutiva
+    llegue a delatarla.
+  </p>
+  <p>
+    Además funciona en estaciones que no publican umbral, que de otro modo quedarían
+    ciegas. Y hay una regla que no se negocia: cuando la DGA declara alerta
+    oficialmente, el sistema nunca rebaja el nivel por debajo de «alerta». Es la
+    fuente oficial y no se la contradice.
+  </p>
 
-  <h2>Por qué open source</h2>
+  <h2>Episodios, no lecturas</h2>
+  <Image
+    src={detalle}
+    alt="Ficha de una estación con su estado, umbral e historial de nivel"
+    class="mb-6 w-full max-w-sm rounded-xl border border-white/10 shadow-xl"
+  />
+  <p>
+    El sistema no guarda una alerta por cada medición alta: registra
+    <strong>episodios</strong>. Uno se abre cuando la estación deja de estar normal y
+    se cierra cuando vuelve a estarlo.
+  </p>
+  <p>
+    La diferencia importa al mirar el historial. Con lecturas sueltas, la pregunta que
+    puede responder es «cuántas mediciones altas hubo»; con episodios, «cuántas
+    crecidas hubo», que es la que le interesa a alguien que vive junto al río.
+  </p>
+  <p>
+    De ahí sale también el criterio para avisar: sólo se emite un evento cuando el
+    estado cambia — se abre, escala, desciende o se resuelve. Mientras el nivel se
+    mantiene, el episodio se actualiza en silencio, para no ahogar a los vecinos en
+    notificaciones repetidas de algo que ya saben.
+  </p>
+
+  <h2>Arquitectura</h2>
+  <p>
+    Backend en <strong>FastAPI con SQLAlchemy sobre PostgreSQL 16 con PostGIS</strong>,
+    en las mismas capas que uso en el resto de mis proyectos:
+    <code>models</code> → <code>schemas</code> → <code>services</code> →
+    <code>routes</code>. La lógica de evaluación vive en
+    <code>alert_service.py</code>, aislada del transporte, y por eso se puede probar
+    sin levantar la API.
+  </p>
+  <p>
+    El frontend es <strong>React 19 con Vite</strong>, el mapa va sobre
+    <strong>Leaflet con teselas de OpenStreetMap</strong> —que no piden clave de API,
+    algo que importa en un proyecto que aspira a ser replicable sin costes— y el
+    historial se dibuja con Recharts. Las alertas viajan por WebSocket con
+    reconexión progresiva, así que el panel cambia solo cuando el estado de un río
+    cambia.
+  </p>
+  <p>
+    La ingesta corre aparte, como servicio o desde cron, y va acumulando la serie
+    histórica. Es una necesidad, no una elección: el visor de la DGA sólo entrega una
+    fotografía del instante, nunca el pasado. El historial que muestra la ficha de
+    cada estación existe porque este sistema lo construyó sondeando.
+  </p>
+
+  <h2>Por qué es open source</h2>
   <p>
     Porque el destinatario no tiene con qué pagarlo. Una junta de vecinos rural o un
-    municipio pequeño no va a licitar un sistema de alerta temprana, y ese es exactamente
-    el lugar donde más falta hace.
+    municipio pequeño no va a licitar un sistema de alerta temprana, y ese es
+    exactamente el lugar donde más falta hace.
   </p>
   <p>
-    Con el código abierto, otra localidad puede instalarlo, adaptarlo a su río y mantenerlo
-    sin depender de mí ni pagar una licencia. Un proyecto de seguridad comunitaria que
-    dependa de que su autor siga interesado es un proyecto frágil; abrirlo es lo que le da
-    posibilidad de sobrevivir.
-  </p>
-  <p>
-    No busca ser rentable. Busca existir y que se pueda copiar.
+    Con el código abierto, otra región puede instalarlo, ajustar los umbrales a sus
+    ríos y mantenerlo sin depender de mí. Un proyecto de seguridad comunitaria que
+    dependa de que su autor siga interesado es un proyecto frágil; abrirlo es lo que
+    le da posibilidad de sobrevivir.
   </p>
 
   <h2>En qué está hoy</h2>
   <p>
-    En construcción. Todavía no hay demo pública ni repositorio abierto: cuando exista una
-    primera versión que funcione de punta a punta, el código se publica.
+    Funcionando sobre datos reales de las 55 estaciones de La Araucanía, con el
+    repositorio público. Todavía no hay despliegue abierto al público ni el canal de
+    notificación que cierra el círculo: hoy el sistema detecta y muestra, y el
+    siguiente paso es que el aviso salga hacia el vecino sin que nadie tenga que
+    estar mirando la pantalla.
   </p>
 </Articulo>

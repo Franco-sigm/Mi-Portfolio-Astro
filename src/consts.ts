@@ -169,7 +169,7 @@ export type Project = {
   domain?: string; // aún sin dominio mientras el proyecto no esté publicado
   role: string;
   description: string;
-  image: 'condominio' | 'surcode' | 'portafolio' | null;
+  image: 'condominio' | 'surcode' | 'portafolio' | 'rios' | null;
   tags: string[];
   links: { label: string; url: string; primary?: boolean }[];
   note?: string; // aclaración bajo los botones (ej: repo privado)
@@ -230,15 +230,17 @@ export const PROJECTS: Project[] = [
     ],
   },
   {
-    // 👈 ponle el nombre definitivo cuando lo tengas
-    title: 'Monitoreo de ríos y alertas tempranas',
+    title: 'Leufü Wechun',
+    domain: 'Monitoreo hidrológico de La Araucanía',
     role: 'Producto y desarrollo full-stack',
     description:
-      'Sistema de monitoreo del caudal de ríos que avisa a los vecinos de sectores rurales cuando el nivel se acerca a un umbral de riesgo. La zona rural es justo donde la alerta llega tarde: el objetivo es que el aviso salga solo, sin que nadie tenga que estar mirando.',
-    image: null,
-    // 👈 confirma o corrige el stack cuando lo definas
-    tags: ['Python', 'FastAPI', 'PostgreSQL'],
-    links: [{ label: 'Artículo', url: '/proyectos/monitoreo-rios' }],
+      'La DGA sólo publica el nivel de las estaciones que ya están en alerta: cuando el dato aparece, el río ya cruzó el umbral. Este sistema recupera el caudal de las 55 estaciones de La Araucanía, detecta crecidas por cercanía al umbral y por tendencia, y avisa mientras todavía queda margen de reacción. Open source, sin fines de lucro.',
+    image: 'rios',
+    tags: ['Python', 'FastAPI', 'PostgreSQL', 'React', 'Leaflet'],
+    links: [
+      { label: 'Ver código', url: 'https://github.com/Franco-sigm/leufu-wechun', primary: true },
+      { label: 'Artículo', url: '/proyectos/monitoreo-rios' },
+    ],
     enConstruccion: true,
   },
   {
