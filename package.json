@@ -4,9 +4,10 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "PUBLIC_API_URL=https://api.portafolio.surcode.cl astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "build:local": "astro build"
   },
   "dependencies": {
     "@astrojs/tailwind": "^6.0.2",

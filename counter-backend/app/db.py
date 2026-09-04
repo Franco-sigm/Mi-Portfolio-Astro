@@ -1,14 +1,18 @@
 import os
+from pathlib import Path
 from urllib.parse import unquote, urlparse
 
 import pymysql
 from dotenv import load_dotenv
 
-load_dotenv()
+# Ruta absoluta y anclada a este archivo, no relativa al directorio de
+# trabajo: bajo Passenger el proceso arranca desde otro sitio y un
+# load_dotenv() a secas puede no encontrar el .env — o encontrar otro.
+load_dotenv(Path(__file__).with_name('.env'))
 
 
 def get_db_connection():
-    database_url = os.getenv("DATABASE_URL")
+    database_ur
 
     # Validación de la existencia de la variable de entorno
     if not database_url:

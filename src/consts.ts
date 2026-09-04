@@ -4,7 +4,7 @@
 // =============================================================
 
 export const SITE = {
-  url: 'https://portfolio-personal.surcode.cl',
+  url: 'https://portafolio.surcode.cl',
   // Título de la pestaña del navegador
   title: 'Franco Cañete — Desarrollador Web Full-Stack',
   // Descripción para Google y redes sociales (máx. ~160 caracteres)
@@ -28,7 +28,7 @@ Busco sumarme a un equipo donde pueda seguir construyendo software que resuelva 
 export const CONTACT = {
   location: 'Chile',
   email: 'americansima29@gmail.com', // 👈 cámbialo si usas otro email profesional
-  cvPath: '/cv-franco-canete.pdf',    // 👈 sube tu CV a /public con este nombre
+  cvPath: '/cv-franco-canete.pdf', // el archivo vive en /public
   linkedin: 'https://www.linkedin.com/in/franco-ca%C3%B1ete-herrera-36963a320/',
   github: 'https://github.com/Franco-sigm',
 };
@@ -56,7 +56,8 @@ export const SKILLS: { name: string; icon: string }[] = [
 //  que defines en un archivo .env en la raíz del proyecto:
 //
 //    En local:      PUBLIC_API_URL=http://127.0.0.1:5000
-//    En producción: PUBLIC_API_URL=https://tu-dominio.cl
+//    En producción: PUBLIC_API_URL=https://api.portafolio.surcode.cl
+//    (ya viene puesto en el script `build` de package.json)
 //
 //  Si la variable está vacía, la sección de métricas NO se
 //  renderiza: así el footer queda limpio mientras el backend no
