@@ -52,7 +52,7 @@ export const SKILLS: { name: string; icon: string }[] = [
 
 // -------------------------------------------------------------
 //  MÉTRICAS: contador de visitas y botón de corazón.
-//  La URL de la API Flask se lee de la variable PUBLIC_API_URL,
+//  La URL de la API (PHP) se lee de la variable PUBLIC_API_URL,
 //  que defines en un archivo .env en la raíz del proyecto:
 //
 //    En local:      PUBLIC_API_URL=http://127.0.0.1:5000
@@ -149,6 +149,7 @@ export const TECH_ICONS: Record<string, { icon: string; invert?: boolean }> = {
   JavaScript: { icon: '/icons/javascript.svg' },
   MySQL: { icon: '/icons/mysql.svg' },
   'Node.js': { icon: '/icons/nodejs.svg' },
+  PHP: { icon: '/icons/php.svg' },
   PostgreSQL: { icon: '/icons/postgresql.svg' },
   Python: { icon: '/icons/python.svg' },
   React: { icon: '/icons/react.svg' },
@@ -215,19 +216,19 @@ export const PROJECTS: Project[] = [
   },
   {
     title: 'Portfolio personal + API de métricas',
-    domain: 'portfolio-personal.surcode.cl',
+    domain: 'portafolio.surcode.cl',
     role: 'Desarrollo full-stack',
     description:
-      'Este sitio. Además del frontend en Astro, construí una API REST en Flask con MySQL que registra visitas y “me gusta” en tiempo real, con CORS restringido por dominio y configuración por variables de entorno.',
+      'Este sitio. Además del frontend en Astro, construí una API REST en PHP con MySQL que registra visitas y “me gusta” en tiempo real y atiende el formulario de contacto, con CORS restringido por dominio y límite de peticiones por IP.',
     image: 'portafolio',
-    tags: ['Astro', 'TypeScript', 'Tailwind', 'Flask', 'MySQL'],
+    tags: ['Astro', 'TypeScript', 'Tailwind', 'PHP', 'MySQL'],
     links: [
       {
         label: 'Ver código en GitHub',
         url: 'https://github.com/Franco-sigm/Mi-Portfolio-Astro',
         primary: true,
       },
-      { label: 'Ver sitio', url: 'https://portfolio-personal.surcode.cl' },
+      { label: 'Ver sitio', url: 'https://portafolio.surcode.cl' },
     ],
   },
   {
