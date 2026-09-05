@@ -1,3 +1,7 @@
+# Portafolio hecho con Astro + pequeño backend con Flask + Postgress para conteo de métricas
+```
+visita mi portafolio en www.portafolio.surcode.cl
+```
 # Astro Starter Kit: Basics
 
 ```sh
