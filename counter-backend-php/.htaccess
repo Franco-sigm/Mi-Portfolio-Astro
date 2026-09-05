@@ -1,0 +1,12 @@
+# Todas las peticiones pasan por index.php, que hace de enrutador.
+# Así las URLs siguen siendo /api/stats y no /api/stats.php, y el
+# frontend no necesita cambiar nada.
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]
+
+# El .env nunca debe servirse por HTTP
+<FilesMatch "^\.env">
+    Require all denied
+</FilesMatch>

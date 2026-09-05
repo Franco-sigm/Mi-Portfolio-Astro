@@ -1,6 +1,7 @@
 # build output
 dist/
 dist.zip
+counter-backend-php.zip
 
 # generated types
 .astro/

@@ -1,5 +1,0 @@
-Flask
-flask-cors
-Flask-Limiter
-PyMySQL
-python-dotenv
