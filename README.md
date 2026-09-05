@@ -1,50 +1,75 @@
-# Portafolio hecho con Astro + pequeño backend PHP + Postgress para conteo de métricas + rate limit
-```
-[portafolio.surcode.cl](https://portafolio.surcode.cl)
-```
-# Astro Starter Kit: Basics
+# Portafolio personal
 
-```sh
-bun create astro@latest -- --template basics
-```
+Sitio personal de Franco Cañete, desarrollador web full-stack.
 
-> 🧑 **Seasoned astronaut?** Delete this file. Have fun!
+**https://portafolio.surcode.cl**
 
-##  Project Structure
+Construido con Astro y acompañado de una pequeña API en PHP que registra
+las visitas, los "me gusta" y atiende el formulario de contacto.
 
-Inside of your Astro project, you'll see the following folders and files:
+---
+
+## Stack
+
+**Frontend** — Astro 5, TypeScript y Tailwind CSS. Sitio estático: el build
+genera HTML plano, sin servidor detrás. Las imágenes se optimizan a WebP en
+tiempo de compilación y la tipografía del titular va subconjuntada y servida
+desde el propio dominio, sin pedir nada a terceros.
+
+**Backend** — PHP 7.4+ con MySQL, sin dependencias ni gestor de paquetes.
+Un `index.php` enruta y un `.htaccess` le pasa todas las peticiones, de modo
+que las URLs son `/api/stats` y no `/api/stats.php`.
+
+## La API
+
+| Ruta | Método | Devuelve |
+| --- | --- | --- |
+| `/api/stats` | GET | `{"visitas": n, "corazones": n}` |
+| `/api/visit` | POST | `{"visitas": n}` |
+| `/api/like` | POST | `{"corazones": n}` |
+| `/api/contact` | POST | `{"ok": true}` |
+
+Tres decisiones que vale la pena mencionar:
+
+- **CORS restringido por dominio**, con la lista de orígenes en el `.env`.
+- **Límite de peticiones por IP**, guardado en base de datos porque PHP no
+  conserva memoria entre peticiones. La IP se almacena hasheada: para contar
+  peticiones basta con poder comparar, no con poder leer.
+- **El formulario usa `Reply-To`**, no `From`, para la dirección de quien
+  escribe. Enviar en nombre del visitante haría que SPF lo tratara como
+  suplantación y acabaría en spam.
+
+## Estructura
 
 ```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+src/
+├── components/          secciones del sitio
+├── layouts/             plantilla base y la de los artículos
+├── pages/               index y las páginas de detalle de cada proyecto
+├── consts.ts            todo el contenido editable del sitio
+└── styles/global.css
+
+counter-backend-php/     la API: se sube al public_html del subdominio
+public/                  archivos servidos tal cual (CV, certificados, iconos)
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+Para cambiar textos, proyectos o tecnologías se edita **`src/consts.ts`**.
+Los componentes leen de ahí y no llevan contenido escrito a mano.
 
-##  Commands
+## Puesta en marcha
 
-All commands are run from the root of the project, from a terminal:
+```sh
+npm install
+npm run dev              # http://localhost:4321
+```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `bun install`             | Installs dependencies                            |
-| `bun dev`             | Starts local dev server at `localhost:4321`      |
-| `bun build`           | Build your production site to `./dist/`          |
-| `bun preview`         | Preview your build locally, before deploying     |
-| `bun astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `bun astro -- --help` | Get help using the Astro CLI                     |
+| Comando | Qué hace |
+| --- | --- |
+| `npm run dev` | servidor de desarrollo |
+| `npm run build` | build de producción, apuntando a la API publicada |
+| `npm run build:local` | build apuntando a la API local |
+| `npm run preview` | sirve el build para revisarlo |
 
-##  Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+El backend necesita un `.env` junto a los archivos PHP; hay una plantilla sin
+valores en `counter-backend-php/.env.example`, y el esquema de las tablas en
+`esquema.sql`.
