@@ -1,0 +1,268 @@
+---
+import { Image } from 'astro:assets';
+import Articulo from '../../layouts/Articulo.astro';
+import portada from '../../assets/construprec-proyecto.png';
+import etapas from '../../assets/construprec-etapas.png';
+import presupuesto from '../../assets/construprec-presupuesto.png';
+---
+
+<Articulo
+  title="Construprec"
+  descripcion="Calculadora de presupuestos de construcción en madera hecha para una constructora local: se ingresa la geometría de la obra y la aplicación deduce qué materiales hacen falta, cuántos y cuánto cuestan."
+  domain="Presupuestos de construcción en madera"
+  etiqueta="Open source"
+  resumen="Nadie arma a mano la lista de materiales de un muro. Se sabe que mide 6 metros y que los pies derechos van cada 40 centímetros, y de ahí tiene que salir todo lo demás. Construprec invierte el orden habitual: primero la geometría, después los materiales que esa geometría obliga a comprar, y recién al final los precios."
+  ficha={{
+    Tipo: 'Encargo para una constructora local',
+    Rol: 'Producto, motor de cálculo, API e interfaz',
+    Estado: 'Funcionando de punta a punta · código público',
+  }}
+  stack={[
+    'PHP',
+    'Laravel',
+    'MySQL',
+    'React',
+    'Vite',
+    'Sanctum',
+    'dompdf',
+    'Pest',
+    'PHPStan',
+  ]}
+  cta={{ label: 'Ver código en GitHub', url: 'https://github.com/Franco-sigm/construprec' }}
+  nota="Repositorio público. Hoy cubre dos etapas de obra: muros y techumbre."
+>
+  <Image
+    slot="portada"
+    src={portada}
+    alt="Pestaña Proyecto de Construprec: medidas de la planta a la izquierda, plano isométrico del entramado a la derecha y las cifras de obra en la barra inferior"
+    class="mb-10 w-full rounded-xl border border-white/10 object-cover shadow-2xl"
+  />
+
+  <h2>El encargo</h2>
+  <p>
+    Este proyecto nació de un encargo de una constructora local dedicada a
+    construcciones en madera. El problema que traían no era de contabilidad sino
+    de obra: cada presupuesto salía de una planilla que alguien rehacía a mano
+    para cada casa, copiando fórmulas de la anterior y ajustando cantidades a
+    ojo.
+  </p>
+  <p>
+    Ese método tiene dos costos. El obvio es el tiempo. El caro es el otro: un
+    error de tipeo en una celda no se nota, y el número equivocado se entrega
+    firmado. Cuando el material se compra corto hay que volver a la barraca; cuando
+    sobra, el sobrante se paga igual.
+  </p>
+  <p>
+    Y hay una tercera cosa que la planilla no permitía: comparar. Preguntas como
+    «cuánto cuesta separar los pies derechos a 60 en vez de 40» o «cuánto cambia
+    si el revestimiento es terciado en lugar de fibrocemento» exigían rehacer el
+    cálculo completo, así que en la práctica no se hacían. La decisión se tomaba
+    por costumbre.
+  </p>
+
+  <h2>El orden es el producto</h2>
+  <p>
+    La idea central de Construprec es el orden en que pide las cosas:
+    <strong>primero la geometría, después las cantidades, al final los
+    precios</strong>. Se escriben las medidas de la planta y de ahí salen las
+    cuatro caras; cada cara recibe sus puertas y ventanas con tipo, cantidad y
+    medidas.
+  </p>
+  <p>
+    Las cantidades no dependen del precio, así que se resuelven y se muestran
+    antes de preguntarlo. Cuando la aplicación llega a pedir valores, ya sabe que
+    hacen falta 80 tiras de pino 2x3 y 101 tablas de siding; lo único que le falta
+    es cuánto cuesta cada una. Ese detalle cambia cómo se usa la herramienta:
+    se puede llegar a la barraca con la lista de compra ya cerrada.
+  </p>
+
+  <h2>El dibujo no es una ilustración</h2>
+  <Image
+    src={etapas}
+    alt="Pestaña Etapas: escuadría, largo comercial, separación entre pies derechos, cadenetas, refuerzo de esquina y configuración de techumbre"
+    class="mb-6 w-full rounded-xl border border-white/10 shadow-xl"
+  />
+  <p>
+    El plano isométrico que se ve en la portada se genera desde las mismas
+    medidas con que se calcula el presupuesto. Los pies derechos dibujados son
+    los que se van a comprar: si se cambia la separación de 40 a 60 centímetros,
+    el dibujo cambia con ella.
+  </p>
+  <p>
+    Eso no es decoración, es control de errores. Un 6 escrito donde iba un 0,6
+    pasa inadvertido en una tabla de números y salta a la vista en cuanto la casa
+    se dibuja deformada.
+  </p>
+  <p>
+    La barra inferior lleva las cifras de obra en vivo —superficie neta, cavidad
+    real, piezas a cortar, tiras a comprar, recorte y pérdida— y todo recalcula al
+    instante contra la API. Ese ida y vuelta es lo que convierte la aplicación en
+    una herramienta de decisión y no en un formulario: la comparación que antes
+    no se hacía ahora cuesta un clic.
+  </p>
+
+  <h2>Toda medida entra en milímetros enteros</h2>
+  <p>
+    La regla del producto es que cada campo deja elegir su unidad: la escuadría se
+    puede escribir en pulgadas aunque el muro esté en metros, porque así se habla
+    en la obra. Internamente, en cambio, hay una sola representación:
+    <strong>milímetros enteros</strong>.
+  </p>
+  <p>
+    Si cada paso del cálculo convirtiera entre metros, pies y pulgadas, el error
+    de redondeo se iría acumulando a lo largo de un muro y el despiece dejaría de
+    cuadrar. Convertir una sola vez al entrar y una sola vez al mostrar acota el
+    error a esos dos puntos.
+  </p>
+  <p>
+    Cada fila recuerda en qué unidad se escribió, sólo para devolverla igual. Y
+    cada unidad se muestra con los decimales que puede representar: 16 pulgadas se
+    guardan como 406 mm y vuelven como 15,98, que hay que mostrar como 16,0 o el
+    usuario cree que la aplicación le cambió el dato.
+  </p>
+
+  <h2>La medida nominal no sirve para calcular</h2>
+  <p>
+    Un 2x3 no mide 50,8 × 76,2 mm sino cerca de 41 × 65: el cepillado se come la
+    diferencia. El catálogo guarda las dos medidas y todo el despiece usa la real.
+    La norma NCh2824 distingue además tres estados —verde, seca y seca cepillada—
+    con medidas y precios distintos, así que «2x3» a secas es un producto
+    ambiguo.
+  </p>
+  <p>
+    Con los revestimientos pasa lo mismo por otra vía: un siding de 190 mm
+    instalado con 30 de traslape sólo deja <strong>160 a la vista</strong>.
+    Cotizarlo por su ancho completo deja la obra corta en un 16 %: sobre 44 m²
+    son 16 unidades donde hacen falta 83. Por eso el rendimiento no se escribe a
+    mano en el catálogo, se deriva de la geometría de la pieza.
+  </p>
+
+  <h2>El recorte se aprovecha</h2>
+  <p>
+    Las piezas se empaquetan en tiras comerciales con
+    <em>first-fit decreasing</em>: se ordenan de más larga a más corta y cada una
+    entra en la primera tira donde quepa.
+  </p>
+  <p>
+    Un pie derecho de 2,318 m deja 0,882 libres en una tira de 3,2, y un tramo
+    bajo ventana de 0,859 cabe justo ahí. Calculando cada largo por separado esa
+    madera se compra dos veces: sobre una planta de 6 × 4 son
+    <strong>32 metros</strong> de diferencia.
+  </p>
+  <p>
+    El orden importa por una segunda razón: deja las cadenetas al final, que es
+    donde tienen que ir. Al ser la pieza más corta entran en los recortes que ya
+    dejaron los cortes largos, y una fila completa —casi 15 metros lineales— no
+    cuesta ninguna tira adicional.
+  </p>
+  <p>
+    Con la pérdida ocurrió algo parecido. Bajo la palabra «merma» había tres cosas
+    distintas: el recorte del despiece lo sabe el empaquetado, el aserrín sale de
+    contar los cortes a 3 mm por pasada, y lo único que queda al criterio de quien
+    cotiza es el descarte por defectos —nudos, piezas torcidas—, que depende del
+    grado de la madera y de la barraca. El número calculado se muestra junto al
+    campo, porque el problema de fondo era que el 5 % se sumaba encima de un
+    9,7 % que nadie veía.
+  </p>
+
+  <h2>Un número que se puede comprobar</h2>
+  <Image
+    src={presupuesto}
+    alt="Presupuesto desglosado: cada partida muestra superficie a cubrir, rendimiento por unidad, cantidad, precio unitario y subtotal, agrupados por etapa"
+    class="mb-6 w-full rounded-xl border border-white/10 shadow-xl"
+  />
+  <p>
+    Cada partida dice la superficie a cubrir, cuánto rinde una unidad, la
+    cantidad, el precio unitario y el subtotal. «16 planchas» obliga a confiar;
+    «16 planchas para cubrir 44 m², rindiendo 2,9768 cada una» se puede comprobar
+    con una calculadora en la mano, que es lo que hace cualquiera antes de gastar
+    medio millón de pesos.
+  </p>
+  <p>
+    Se agrupa por etapa con su subtotal, porque comparar cuánto cuesta el techo
+    aparte de los muros es justo la decisión que se toma mirando el documento. Y
+    cada línea guarda además su desglose completo en un campo aparte: de qué caras
+    vino, cuántas piezas de cada largo, el plan de corte tira por tira. Sin eso,
+    cuando un número no cuadra sólo queda confiar.
+  </p>
+  <p>
+    El presupuesto guardado es una <strong>fotografía</strong>: copia el nombre,
+    el rendimiento, el precio y la tasa de cambio con que se cotizó. Sin esa
+    copia, subir el precio de una plancha cambiaría todos los presupuestos ya
+    entregados, incluido el que el cliente tiene en la mano. Por eso cada cálculo
+    emite uno nuevo en vez de pisar el anterior, y el PDF se arma desde las líneas
+    guardadas y no recalculando.
+  </p>
+
+  <h2>Arquitectura</h2>
+  <p>
+    La API es <strong>Laravel 13 sobre PHP 8.4 con MySQL 8</strong>, y la
+    interfaz <strong>React 19 con Vite</strong>. La elección de PHP no es
+    estética: el destino es un hosting compartido, donde Python obliga a pelear
+    con Passenger y entornos virtuales mientras que PHP se sube y corre.
+  </p>
+  <p>
+    De ahí salen las demás decisiones. Sin Redis, sin Horizon, sin Telescope: no
+    hay procesos permanentes, así que sesión, caché y colas van a la base de datos
+    y lo periódico va por cron. El PDF lo arma dompdf, que es PHP puro, porque en
+    hosting compartido no hay dónde instalar un navegador headless. La sesión usa
+    tokens de Sanctum porque la API y el sitio viven en dominios distintos.
+  </p>
+  <p>
+    Dentro del backend, la separación que más rinde es que
+    <strong>el motor de cálculo no conoce Eloquent</strong>. Toda la lógica recibe
+    y devuelve objetos de valor; un servicio traduce un proyecto guardado a esos
+    objetos y el controlador traduce lo que llega por HTTP. Eso permite dos cosas:
+    el motor se prueba sin base de datos, y el mismo cálculo sirve para un
+    proyecto guardado y para uno que el usuario todavía arma en pantalla, sin
+    duplicar una sola regla.
+  </p>
+  <p>
+    Calcular tampoco escribe nada. El endpoint de cálculo es una consulta pura:
+    el asistente recalcula en cada pulsación, y persistir cada una llenaría la
+    base de proyectos que nadie pidió. Guardar es un paso aparte que el usuario
+    decide, y hay un test que lo fija contando filas después de calcular.
+  </p>
+  <p>
+    En seguridad, los proyectos se buscan acotados a su dueño en vez de comprobar
+    el permiso después de encontrarlos: un proyecto ajeno responde 404 y no 403,
+    de modo que no se filtra siquiera que ese identificador existe. La entrada da
+    el mismo mensaje para correo inexistente que para contraseña equivocada —si
+    fueran distintos, cualquiera podría averiguar qué correos están registrados— y
+    va con freno de tres intentos por minuto. Y la sesión sólo hace falta para
+    guardar: calcular no la necesita, porque pedir registro antes de que la
+    herramienta demuestre servir espanta a quien venía a probarla.
+  </p>
+
+  <h2>Cómo sé que los números están bien</h2>
+  <p>
+    El proyecto tiene <strong>208 tests con Pest</strong>, PHPStan en nivel 5 con
+    Larastan y Pint sobre el backend, oxlint sobre el frontend. En un producto
+    cuya única razón de existir es entregar una cifra correcta, la suite no es un
+    trámite: es la parte que sostiene la promesa.
+  </p>
+  <p>
+    Los tests corren contra SQLite en memoria, que es rápido pero no se comporta
+    igual que MySQL en todo, así que la corrida contra MySQL antes de desplegar es
+    obligatoria. Un ejemplo real de por qué: MySQL no revierte el contador de
+    autoincremento al deshacer la transacción de cada test, y eso destapó diez
+    casos que pasaban en un motor y fallaban en el otro.
+  </p>
+
+  <h2>En qué está hoy</h2>
+  <p>
+    Funciona de punta a punta: geometría → materiales deducidos → precios →
+    presupuesto guardado → PDF. Están construidas dos etapas de obra, muros y
+    techumbre, y el código es público.
+  </p>
+  <p>
+    Lo que falta está anotado sin adornos en el propio repositorio: dimensiones
+    editables por cara para plantas en L —el esquema ya lo soporta—, las etapas de
+    entrepiso y terminaciones, y la interfaz probada en móvil. Hay también un
+    puñado de datos de catálogo que están interpolados y no confirmados en ficha
+    de proveedor: las medidas del 3x4, las piezas por caja del siding, el
+    rendimiento de la teja de arcilla. Van marcados en el código, porque un
+    número que parece verificado y no lo está es peor que uno que se declara
+    pendiente.
+  </p>
+</Articulo>

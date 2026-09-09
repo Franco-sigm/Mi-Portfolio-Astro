@@ -1,14 +1,12 @@
 ---
-import { Image } from 'astro:assets';
-import { PROJECTS, TECH_ICONS } from '../consts';
-import portafolio from '../assets/portafolio.png';
-import condominio from '../assets/condominio.png';
-import surcode from '../assets/surcode.png';
-import rios from '../assets/rios-vista-general.png';
+import { PROJECTS } from '../consts';
+import ProyectoFila from './ProyectoFila.astro';
 
-// Al subir una captura nueva: impórtala arriba y regístrala aquí con la
-// misma clave que uses en el campo `image` de consts.ts.
-const images = { portafolio, condominio, surcode, rios };
+// Cuántos proyectos se ven sin desplegar. Los de consts.ts van ordenados
+// de mayor a menor, así que los primeros son los que conviene mostrar.
+const VISIBLES = 5;
+const destacados = PROJECTS.slice(0, VISIBLES);
+const resto = PROJECTS.slice(VISIBLES);
 ---
 
 <section id="proyectos" class="mx-auto max-w-5xl px-6 py-20">
@@ -18,119 +16,106 @@ const images = { portafolio, condominio, surcode, rios };
   </p>
 
   <div class="space-y-20">
+    {destacados.map((p, i) => <ProyectoFila proyecto={p} invertida={i % 2 === 1} />)}
+
     {
-      PROJECTS.map((p, i) => {
-        // Filas alternadas: la captura cambia de lado en cada proyecto.
-        const invertida = i % 2 === 1;
-
-        return (
-          <article class="grid items-center gap-8 md:grid-cols-2 md:gap-12">
-            <div class={invertida ? 'md:order-2' : ''}>
-              {p.image ? (
-                <Image
-                  src={images[p.image]}
-                  alt={`Vista previa de ${p.title}`}
-                  class="aspect-video w-full rounded-xl border border-white/10 object-cover object-top shadow-2xl transition-transform duration-300 hover:scale-[1.02]"
-                />
-              ) : (
-                /* Marcador mientras no haya captura: mejor esto que un hueco.
-                   Sin dominio todavía, se anuncia el estado del proyecto. */
-                <div class="flex aspect-video w-full items-center justify-center rounded-xl border border-dashed border-white/15 bg-white/5">
-                  <span class="font-mono text-sm text-gray-500">
-                    {p.domain ?? 'En construcción'}
-                  </span>
-                </div>
-              )}
-            </div>
-
-            <div class={invertida ? 'md:order-1' : ''}>
-              {p.domain && <p class="mb-1 font-mono text-xs text-cyan-400">{p.domain}</p>}
-
-              {p.enConstruccion && (
-                <p class="mb-2 inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-gray-300">
-                  <span class="latido h-1.5 w-1.5 rounded-full bg-cyan-400" aria-hidden="true" />
-                  En construcción
-                </p>
-              )}
-
-              <h3 class="text-2xl font-bold text-white">{p.title}</h3>
-              <p class="mb-4 mt-1 text-sm font-medium text-gray-300">{p.role}</p>
-
-              <p class="mb-5 text-gray-400">{p.description}</p>
-
-              <div class="mb-6 flex flex-wrap gap-2">
-                {p.tags.map((t) => {
-                  // Un tag sin logo (como 'SEO') se muestra solo con texto
-                  const tech = TECH_ICONS[t];
-                  return (
-                    <span class="tech-tag">
-                      {tech && (
-                        <img
-                          src={tech.icon}
-                          alt=""
-                          aria-hidden="true"
-                          width="16"
-                          height="16"
-                          loading="lazy"
-                          class:list={['h-4 w-4 object-contain', tech.invert && 'icon-invert']}
-                        />
-                      )}
-                      {t}
-                    </span>
-                  );
-                })}
-              </div>
-
-              <div class="flex flex-wrap items-center gap-3">
-                {p.links
-                  .filter((l) => l.url)
-                  .map((l) => {
-                    // Una página del propio sitio no debe abrirse en pestaña nueva
-                    const interno = l.url.startsWith('/');
-                    return (
-                      <a
-                        href={l.url}
-                        target={interno ? undefined : '_blank'}
-                        rel={interno ? undefined : 'noopener noreferrer'}
-                        class={l.primary ? 'btn-primary' : 'btn-outline'}
-                      >
-                        {l.label}
-                      </a>
-                    );
-                  })}
-              </div>
-
-              {p.note && <p class="mt-4 text-xs italic text-gray-500">{p.note}</p>}
-            </div>
-          </article>
-        );
-      })
+      resto.length > 0 && (
+        /* Sin JavaScript esto queda abierto y el botón oculto: el script
+           es el que cierra la lista al cargar. Así nadie se queda sin ver
+           proyectos si el script no llega a ejecutarse. */
+        <div id="proyectos-resto" class="space-y-20">
+          {resto.map((p, i) => (
+            <ProyectoFila proyecto={p} invertida={(VISIBLES + i) % 2 === 1} />
+          ))}
+        </div>
+      )
     }
   </div>
+
+  {
+    resto.length > 0 && (
+      <div class="mt-16 text-center">
+        <button
+          id="proyectos-toggle"
+          type="button"
+          class="btn-outline inline-flex items-center gap-2"
+          aria-controls="proyectos-resto"
+          aria-expanded="true"
+          hidden
+        >
+          <span data-texto>Ver menos</span>
+          <svg
+            class="flecha h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+          </svg>
+        </button>
+      </div>
+    )
+  }
 </section>
 
 <style>
-  /* Punto que late en la etiqueta de «En construcción»: comunica
-     actividad sin necesidad de texto extra. */
-  .latido {
-    animation: latido-punto 2s ease-in-out infinite;
+  /* La flecha apunta hacia arriba cuando la lista está desplegada. */
+  #proyectos-toggle[aria-expanded='true'] .flecha {
+    transform: rotate(180deg);
   }
 
-  @keyframes latido-punto {
-    0%,
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 0.35;
-      transform: scale(0.75);
-    }
+  .flecha {
+    transition: transform 0.2s ease;
+  }
+
+  /* El botón nace con [hidden] y el script se lo quita. Tailwind no
+     define display para .btn-outline, pero lo dejamos explícito por si
+     alguna clase de utilidad se lo pusiera después. */
+  #proyectos-toggle[hidden],
+  #proyectos-resto[hidden] {
+    display: none;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .latido {
-      animation: none;
+    .flecha {
+      transition: none;
     }
   }
 </style>
+
+<script>
+  const boton = document.getElementById('proyectos-toggle');
+  const resto = document.getElementById('proyectos-resto');
+
+  if (boton && resto) {
+    const texto = boton.querySelector<HTMLElement>('[data-texto]');
+    const cuantos = resto.children.length;
+
+    const pintar = (abierto: boolean) => {
+      resto.hidden = !abierto;
+      boton.setAttribute('aria-expanded', String(abierto));
+      if (texto) {
+        texto.textContent = abierto
+          ? 'Ver menos'
+          : `Ver ${cuantos} proyecto${cuantos === 1 ? '' : 's'} más`;
+      }
+    };
+
+    // Estado inicial: plegado. Se hace desde el script para que sin JS
+    // la sección quede completa en vez de recortada.
+    pintar(false);
+    boton.hidden = false;
+
+    boton.addEventListener('click', () => {
+      const abriendo = boton.getAttribute('aria-expanded') !== 'true';
+      pintar(abriendo);
+      // Al plegar, el botón queda muy abajo respecto de lo que se ve:
+      // lo traemos de vuelta a la vista para no dejar al usuario perdido.
+      if (!abriendo) {
+        boton.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }
+    });
+  }
+</script>

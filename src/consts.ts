@@ -147,6 +147,7 @@ export const TECH_ICONS: Record<string, { icon: string; invert?: boolean }> = {
   Git: { icon: '/icons/git.svg' },
   HTML5: { icon: '/icons/html5.svg' },
   JavaScript: { icon: '/icons/javascript.svg' },
+  Laravel: { icon: '/icons/laravel.svg' },
   MySQL: { icon: '/icons/mysql.svg' },
   'Node.js': { icon: '/icons/nodejs.svg' },
   PHP: { icon: '/icons/php.svg' },
@@ -171,7 +172,7 @@ export type Project = {
   domain?: string; // aún sin dominio mientras el proyecto no esté publicado
   role: string;
   description: string;
-  image: 'condominio' | 'surcode' | 'portafolio' | 'rios' | null;
+  image: 'condominio' | 'surcode' | 'portafolio' | 'rios' | 'construprec' | null;
   tags: string[];
   links: { label: string; url: string; primary?: boolean }[];
   note?: string; // aclaración bajo los botones (ej: repo privado)
@@ -205,6 +206,24 @@ export const PROJECTS: Project[] = [
     note: 'Repositorio privado. Actualmente en etapa de prospección de clientes.',
   },
   {
+    title: 'Construprec',
+    domain: 'Presupuestos de construcción en madera',
+    role: 'Producto, motor de cálculo, API e interfaz',
+    description:
+      'Calculadora de presupuestos para construcción en madera, hecha por encargo de una constructora local. Se ingresa la geometría de la obra —planta, alturas, puertas y ventanas— y la aplicación deduce qué materiales hacen falta y cuántos: despiece, plan de corte que aprovecha los recortes y rendimiento derivado de la geometría de cada pieza. Recién entonces pide los precios y arma el presupuesto desglosado, con su PDF.',
+    image: 'construprec',
+    tags: ['PHP', 'Laravel', 'MySQL', 'React', 'Vite'],
+    links: [
+      {
+        label: 'Ver código en GitHub',
+        url: 'https://github.com/Franco-sigm/construprec',
+        primary: true,
+      },
+      { label: 'Artículo', url: '/proyectos/construprec' },
+    ],
+    note: 'Repositorio público. Hoy cubre dos etapas de obra: muros y techumbre.',
+  },
+  {
     title: 'Surcode',
     domain: 'surcode.cl',
     role: 'Fundador · Diseño y desarrollo completo',
@@ -228,7 +247,6 @@ export const PROJECTS: Project[] = [
         url: 'https://github.com/Franco-sigm/Mi-Portfolio-Astro',
         primary: true,
       },
-      { label: 'Ver sitio', url: 'https://portafolio.surcode.cl' },
     ],
   },
   {

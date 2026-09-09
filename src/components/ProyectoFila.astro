@@ -1,0 +1,134 @@
+---
+import { Image } from 'astro:assets';
+import { TECH_ICONS, type Project } from '../consts';
+import portafolio from '../assets/portafolio.png';
+import condominio from '../assets/condominio.png';
+import surcode from '../assets/surcode.png';
+import rios from '../assets/rios-vista-general.png';
+import construprec from '../assets/construprec-proyecto.png';
+
+// Al subir una captura nueva: impórtala arriba y regístrala aquí con la
+// misma clave que uses en el campo `image` de consts.ts.
+const images = { portafolio, condominio, surcode, rios, construprec };
+
+interface Props {
+  proyecto: Project;
+  invertida: boolean; // la captura cambia de lado en cada fila
+}
+
+const { proyecto: p, invertida } = Astro.props;
+---
+
+<article class="grid items-center gap-8 md:grid-cols-2 md:gap-12">
+  <div class={invertida ? 'md:order-2' : ''}>
+    {
+      p.image ? (
+        <Image
+          src={images[p.image]}
+          alt={`Vista previa de ${p.title}`}
+          class="aspect-video w-full rounded-xl border border-white/10 object-cover object-top shadow-2xl transition-transform duration-300 hover:scale-[1.02]"
+        />
+      ) : (
+        /* Marcador mientras no haya captura: mejor esto que un hueco.
+           Sin dominio todavía, se anuncia el estado del proyecto. */
+        <div class="flex aspect-video w-full items-center justify-center rounded-xl border border-dashed border-white/15 bg-white/5">
+          <span class="font-mono text-sm text-gray-500">
+            {p.domain ?? 'En construcción'}
+          </span>
+        </div>
+      )
+    }
+  </div>
+
+  <div class={invertida ? 'md:order-1' : ''}>
+    {p.domain && <p class="mb-1 font-mono text-xs text-cyan-400">{p.domain}</p>}
+
+    {
+      p.enConstruccion && (
+        <p class="mb-2 inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-gray-300">
+          <span class="latido h-1.5 w-1.5 rounded-full bg-cyan-400" aria-hidden="true" />
+          En construcción
+        </p>
+      )
+    }
+
+    <h3 class="text-2xl font-bold text-white">{p.title}</h3>
+    <p class="mb-4 mt-1 text-sm font-medium text-gray-300">{p.role}</p>
+
+    <p class="mb-5 text-gray-400">{p.description}</p>
+
+    <div class="mb-6 flex flex-wrap gap-2">
+      {
+        p.tags.map((t) => {
+          // Un tag sin logo (como 'SEO') se muestra solo con texto
+          const tech = TECH_ICONS[t];
+          return (
+            <span class="tech-tag">
+              {tech && (
+                <img
+                  src={tech.icon}
+                  alt=""
+                  aria-hidden="true"
+                  width="16"
+                  height="16"
+                  loading="lazy"
+                  class:list={['h-4 w-4 object-contain', tech.invert && 'icon-invert']}
+                />
+              )}
+              {t}
+            </span>
+          );
+        })
+      }
+    </div>
+
+    <div class="flex flex-wrap items-center gap-3">
+      {
+        p.links
+          .filter((l) => l.url)
+          .map((l) => {
+            // Una página del propio sitio no debe abrirse en pestaña nueva
+            const interno = l.url.startsWith('/');
+            return (
+              <a
+                href={l.url}
+                target={interno ? undefined : '_blank'}
+                rel={interno ? undefined : 'noopener noreferrer'}
+                class={l.primary ? 'btn-primary' : 'btn-outline'}
+              >
+                {l.label}
+              </a>
+            );
+          })
+      }
+    </div>
+
+    {p.note && <p class="mt-4 text-xs italic text-gray-500">{p.note}</p>}
+  </div>
+</article>
+
+<style>
+  /* Punto que late en la etiqueta de «En construcción»: comunica
+     actividad sin necesidad de texto extra. */
+  .latido {
+    animation: latido-punto 2s ease-in-out infinite;
+  }
+
+  @keyframes latido-punto {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.35;
+      transform: scale(0.75);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .latido {
+      animation: none;
+    }
+  }
+</style>

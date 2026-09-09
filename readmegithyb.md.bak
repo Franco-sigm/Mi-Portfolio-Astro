@@ -1,0 +1,100 @@
+<div align="center">
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0EA5E9,100:0F172A&height=190&section=header&text=Franco%20Ca%C3%B1ete&fontSize=44&fontColor=ffffff&fontAlignY=34&desc=Desarrollador%20Web%20Full-Stack&descSize=18&descAlignY=54" width="100%" alt="Franco Cañete — Desarrollador Web Full-Stack" />
+
+<a href="https://portafolio.surcode.cl">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=22&pause=1200&color=38BDF8&center=true&vCenter=true&width=620&lines=T%C3%A9cnico+en+An%C3%A1lisis+y+Programaci%C3%B3n;Estudiante+de+Ingenier%C3%ADa+en+Inform%C3%A1tica;De+la+idea+al+producto+en+producci%C3%B3n" alt="Typing SVG" />
+</a>
+
+<br/>
+
+<a href="https://portafolio.surcode.cl">
+  <img src="https://img.shields.io/badge/Ver_mi_portafolio-0EA5E9?style=for-the-badge&logo=astro&logoColor=white" alt="Portafolio" />
+</a>
+<a href="mailto:contacto@surcode.cl">
+  <img src="https://img.shields.io/badge/Contacto-0F172A?style=for-the-badge&logo=maildotru&logoColor=white" alt="Correo" />
+</a>
+<a href="https://github.com/Franco-sigm?tab=repositories">
+  <img src="https://img.shields.io/badge/Repositorios-171515?style=for-the-badge&logo=github&logoColor=white" alt="Repositorios" />
+</a>
+
+</div>
+
+---
+
+### Sobre mí
+
+Técnico en Análisis y Programación Computacional, actualmente estudiando **Ingeniería en Informática**. Mi día a día gira en torno a construir soluciones digitales desde cero, especializándome en productos que resuelven problemas reales.
+
+Me apasiona el ciclo completo del desarrollo: desde el diseño de la arquitectura hasta el despliegue en producción. Integro herramientas modernas para optimizar procesos, mejorar la calidad del código y acelerar los tiempos de entrega — disfruto el desafío de llevar un producto desde la idea inicial hasta una plataforma funcional, robusta y escalable.
+
+Siempre estoy aprendiendo tecnologías nuevas y experimentando con formas más eficientes de trabajar. Si querés intercambiar ideas sobre desarrollo, IA o proyectos interesantes, **¡hablemos!**
+
+---
+
+### Stack
+
+**Frontend**
+
+![Astro](https://img.shields.io/badge/Astro-BC52EE?style=flat-square&logo=astro&logoColor=white)
+![React](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
+![Tailwind](https://img.shields.io/badge/Tailwind-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white)
+
+**Backend**
+
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-000000?style=flat-square&logo=flask&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-777BB4?style=flat-square&logo=php&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=nodedotjs&logoColor=white)
+
+**Datos e infraestructura**
+
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white)
+![Linux](https://img.shields.io/badge/Linux-FCC624?style=flat-square&logo=linux&logoColor=black)
+![Git](https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white)
+
+---
+
+### Proyectos destacados
+
+| Proyecto | De qué se trata | Stack |
+|---|---|---|
+| **[Portafolio + API de métricas](https://portafolio.surcode.cl)** | Sitio estático con backend propio: contador de visitas, sistema de "me gusta" y formulario de contacto | Astro · Tailwind · PHP · MySQL |
+| **[Leufü Wechun](https://portafolio.surcode.cl/proyectos/monitoreo-rios)** | Monitoreo de ríos con visualización de datos en tiempo real | Python · FastAPI |
+| **[Detección de riesgos](https://portafolio.surcode.cl/proyectos/deteccion-riesgos)** | Sistema de detección y alerta temprana | Python |
+| **[ConAdmin](https://portafolio.surcode.cl/proyectos/conadmin)** | Plataforma de administración | Full-Stack |
+
+---
+
+### Actividad
+
+<div align="center">
+
+<img height="165" src="https://github-readme-stats.vercel.app/api?username=Franco-sigm&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0D1117&title_color=38BDF8&icon_color=38BDF8&include_all_commits=true&count_private=true" alt="Estadísticas de GitHub" />
+<img height="165" src="https://github-readme-stats.vercel.app/api/top-langs/?username=Franco-sigm&layout=compact&theme=tokyonight&hide_border=true&bg_color=0D1117&title_color=38BDF8&langs_count=8" alt="Lenguajes más usados" />
+
+</div>
+
+<div align="center">
+
+<img src="https://github-readme-activity-graph.vercel.app/graph?username=Franco-sigm&theme=tokyo-night&hide_border=true&bg_color=0D1117&color=38BDF8&line=38BDF8&point=ffffff&area=true" width="98%" alt="Gráfico de actividad" />
+
+</div>
+
+---
+
+<div align="center">
+
+**¿Trabajamos juntos?**
+
+Estoy abierto a proyectos freelance y oportunidades de desarrollo.
+
+<a href="https://portafolio.surcode.cl">portafolio.surcode.cl</a> · <a href="mailto:contacto@surcode.cl">contacto@surcode.cl</a>
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0F172A,100:0EA5E9&height=110&section=footer" width="100%" alt="" />
+
+</div>

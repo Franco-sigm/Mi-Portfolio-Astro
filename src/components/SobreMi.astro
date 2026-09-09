@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import { CONTACT, PROFILE, STACK } from '../consts';
-import moto from '../assets/moto.jpg';
+import perfil from '../assets/perfil.jpg';
 
 // El nombre se parte en palabras y cada palabra en letras, con un índice
 // corrido para escalonar la aparición. Agrupado por palabra para que el
@@ -94,7 +94,7 @@ const palabras = PROFILE.name.split(' ').map((palabra, i, todas) => ({
     <div class="order-1 flex flex-col items-center gap-7 md:order-2">
       <div class="h-60 w-60 shrink-0 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 p-1.5 sm:h-64 sm:w-64 md:h-72 md:w-72">
         <Image
-          src={moto}
+          src={perfil}
           alt={`Foto de perfil de ${PROFILE.name}`}
           class="h-full w-full rounded-full object-cover"
         />
