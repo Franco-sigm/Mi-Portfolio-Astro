@@ -98,9 +98,11 @@ export const STACK: {
     items: [
       { name: 'Python', icon: '/icons/python.svg' },
       { name: 'FastAPI', icon: '/icons/fastapi.svg' },
+      { name: 'PHP', icon: '/icons/php.svg' },
+      { name: 'Laravel', icon: '/icons/laravel.svg' },
       { name: 'SQLAlchemy', icon: '/icons/sqlalchemy.svg', invert: true },
-      { name: 'MySQL', icon: '/icons/mysql.svg' },
       { name: 'PostgreSQL', icon: '/icons/postgresql.svg' },
+      { name: 'MySQL', icon: '/icons/mysql.svg' },
     ],
   },
   {

@@ -45,8 +45,7 @@ const { proyecto: p, invertida } = Astro.props;
 
     {
       p.enConstruccion && (
-        <p class="mb-2 inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-gray-300">
-          <span class="latido h-1.5 w-1.5 rounded-full bg-cyan-400" aria-hidden="true" />
+        <p class="mb-2 inline-flex items-center rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-gray-300">
           En construcción
         </p>
       )
@@ -106,29 +105,3 @@ const { proyecto: p, invertida } = Astro.props;
     {p.note && <p class="mt-4 text-xs italic text-gray-500">{p.note}</p>}
   </div>
 </article>
-
-<style>
-  /* Punto que late en la etiqueta de «En construcción»: comunica
-     actividad sin necesidad de texto extra. */
-  .latido {
-    animation: latido-punto 2s ease-in-out infinite;
-  }
-
-  @keyframes latido-punto {
-    0%,
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 0.35;
-      transform: scale(0.75);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .latido {
-      animation: none;
-    }
-  }
-</style>
